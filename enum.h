@@ -1,6 +1,11 @@
 #ifndef ENUM_H
 #define ENUM_H
 
+/*
+ * Todo: figure out how to generate enumToString functions without the "multiple definitions" issue
+ * from the compiler
+*/
+
 // #include "aliases.h"
 
 // #define ENUM(TYPENAME, ...) \

@@ -1,303 +1,284 @@
 #ifndef CHARACTER_GEN_H
 #define CHARACTER_GEN_H
 
+#include "aliases.h"
+#include "enum.h"
 #include "roll.h"
-#include "types_aliases.h"
 
 namespace CharGen
 {
 // Archetype
 // -----------------------------------------------------------------------------
-enum archetype_id_t { a_mage, a_thief, a_warrior, a_any };
+ENUM(ArchetypeId, a_mage, a_thief, a_warrior, a_any);
 
-using archetype_t = Roll::RollItem<archetype_id_t>;
+using Archetype = Roll::RollItem<ArchetypeId>;
 
-archetype_t create_archetype(const archetype_id_t id);
+Archetype createArchetype(const ArchetypeId id);
 
-using archetype_roll_list_t = Roll::RollArray<archetype_t, 3>;
-using archetype_roll_matcher_t = Roll::RollMatcher<archetype_t>;
-using mage_range_t = Roll::Range;
-using warrior_range_t = Roll::Range;
-using thief_range_t = Roll::Range;
+using ArchetypeRollList = Roll::RollList<Archetype>;
+using ArchetypeRollMatcher = Roll::RollMatcher<Archetype>;
+using MageRange = Roll::Range;
+using WarriorRange = Roll::Range;
+using ThiefRange = Roll::Range;
 
-archetype_roll_list_t
-create_archetype_roll_list(const mage_range_t mage_range,
-                           const warrior_range_t warrior_range,
-                           const thief_range_t thief_range);
+ArchetypeRollList createArchetypeRollList(const MageRange mageRange,
+                                          const WarriorRange warriorRange,
+                                          const ThiefRange thiefRange);
 
 //  RPG Class
 //  ------------------------------------------------------------------------------
 
-enum rpg_class_id_t
-{
-    c_archer,
-    c_barbarian,
-    c_crusader,
-    c_knight,
-    c_rogue,
-    c_scout,
-    c_warrior,
-    c_acrobat,
-    c_agent,
-    c_assassin,
-    c_bard,
-    c_monk,
-    c_pilgrim,
-    c_thief,
-    c_battle_mage,
-    c_healer,
-    c_mage,
-    c_night_blade,
-    c_sorcerer,
-    c_spell_sword,
-    c_witch_hunter
-};
+ENUM(RpgClassId,
+     c_archer,
+     c_barbarian,
+     c_crusader,
+     c_knight,
+     c_rogue,
+     c_scout,
+     c_warrior,
+     c_acrobat,
+     c_agent,
+     c_assassin,
+     c_bard,
+     c_monk,
+     c_pilgrim,
+     c_thief,
+     c_battle_mage,
+     c_healer,
+     c_mage,
+     c_night_blade,
+     c_sorcerer,
+     c_spell_sword,
+     c_witch_hunter);
 
-using rpg_class_t = Roll::RollItem<rpg_class_id_t>;
+using RpgClass = Roll::RollItem<RpgClassId>;
 
-using rpg_class_roll_list_t = Roll::RollArray<rpg_class_t, 7>;
-using rpg_class_roll_matcher_t = Roll::RollMatcher<rpg_class_t>;
+using RpgClassRollList = Roll::RollList<RpgClass>;
+using RpgClassRollMatcher = Roll::RollMatcher<RpgClass>;
 
-const rpg_class_roll_list_t& get_warrior_class_roll_list();
+const RpgClassRollList &getWarriorClassRollList();
 
-const rpg_class_roll_list_t& get_thief_class_roll_list();
+const RpgClassRollList &getThiefClassRollList();
 
-const rpg_class_roll_list_t& get_mage_class_roll_list();
+const RpgClassRollList &getMageClassRollList();
 
-const rpg_class_roll_list_t& create_rpg_class_roll_list(const archetype_id_t archetype_id);
+const RpgClassRollList &createRpgClassRollList(const ArchetypeId archetypeId);
 
 // Birth Signs
 // ------------------------------------------------------------------------------------------------------------
-enum birth_sign_id_t
-{
-    b_ritual,
-    b_lover,
-    b_lord,
-    b_mage,
-    b_shadow,
-    b_steed,
-    b_apprentice,
-    b_warrior,
-    b_lady,
-    b_tower,
-    b_atronach,
-    b_thief,
-    b_serpent
-};
+ENUM(BirthSignId,
+     b_ritual,
+     b_lover,
+     b_lord,
+     b_mage,
+     b_shadow,
+     b_steed,
+     b_apprentice,
+     b_warrior,
+     b_lady,
+     b_tower,
+     b_atronach,
+     b_thief,
+     b_serpent);
 
-class birth_sign_t : public Roll::RollItem<birth_sign_id_t>
+class BirthSign : public Roll::RollItem<BirthSignId>
 {
 public:
-    birth_sign_t(const birth_sign_id_t i_id, const archetype_id_t archetype_id,
-                 const TAS::String& i_display_name);
+    BirthSign(const BirthSignId id,
+              const ArchetypeId archetypeId,
+              const Aliases::String &displayName);
 
-    bool roll_if_archetype_based_on_birth_sign() const;
+    bool rollIfArchetypeBasedOnBirthSign() const;
 
-    archetype_id_t get_archetype_id() const { return archetype_id_; }
+    ArchetypeId getArchetypeId() const { return archetypeId_; }
 
 private:
-    archetype_id_t archetype_id_;
+    ArchetypeId archetypeId_;
 };
 
-using birth_signs_roll_list_t = Roll::RollArray<birth_sign_t, 13>;
-using birth_signs_roll_matcher_t = Roll::RollMatcher<birth_sign_t>;
+using BirthSignsRollList = Roll::RollList<BirthSign>;
+using BirthSignsRollMatcher = Roll::RollMatcher<BirthSign>;
 
-const birth_signs_roll_list_t& get_birth_signs_roll_list();;
+const BirthSignsRollList &getBirthSignsRollList();
+;
 
 // Sex
 // ------------------------------------------------------------------------------------------------------------
 
-enum sex_id_t { male, female };
+ENUM(SexId, male, female);
 
-using sex_t = Roll::RollItem<sex_id_t>;
+using Sex = Roll::RollItem<SexId>;
 
-sex_t roll_for_sex();
+Sex rollForSex();
 
 // Sexuality
 // ------------------------------------------------------------------------------------------------------------
-enum sexuality_id_t { heterosexual, bisexual, homosexual };
+enum SexualityId { heterosexual, bisexual, homosexual };
 
-using sexuality_t = Roll::RollItem<sexuality_id_t>;
+using Sexuality = Roll::RollItem<SexualityId>;
 
-using sexualities_roll_list_t = Roll::RollArray<sexuality_t, 3>;
-using sexualities_roll_matcher_t = Roll::RollMatcher<sexuality_t>;
+using SexualitiesRollList = Roll::RollList<Sexuality>;
+using SexualitiesRollMatcher = Roll::RollMatcher<Sexuality>;
 
-const sexualities_roll_list_t& create_sexualities_roll_list(const sex_id_t sex_id);
+const SexualitiesRollList &createSexualitiesRollList(const SexId sexId);
 
 // Skin Color
 // ------------------------------------------------------------------------------------------------------------------
-enum skin_color_id_t
-{
-    sc_null,
-    sc_pale,
-    sc_fair,
-    sc_tan,
-    sc_dark,
-    sc_golden,
-    sc_ashen_grey,
-    sc_dark_grey,
-    sc_near_black,
-    sc_brown,
-    sc_olive,
-    sc_dark_green
-};
+ENUM(SkinColorId,
+     sc_nil,
+     sc_pale,
+     sc_fair,
+     sc_tan,
+     sc_dark,
+     sc_golden,
+     sc_ashen_grey,
+     sc_dark_grey,
+     sc_near_black,
+     sc_brown,
+     sc_olive,
+     sc_dark_green);
 
-using skin_color_t = Roll::RollItem<skin_color_id_t>;
+using SkinColor = Roll::RollItem<SkinColorId>;
 
-using skin_color_roll_list_t = Roll::RollVector<skin_color_t>;
-using skin_color_matcher_t = Roll::RollMatcher<skin_color_t>;
+using SkinColorRollList = Roll::RollList<SkinColor>;
+using SkinColorMatcher = Roll::RollMatcher<SkinColor>;
 
-skin_color_matcher_t create_skin_color_matcher(const Roll::Range range, const skin_color_id_t& skin_color_id);
+SkinColorMatcher createSkinColorMatcher(const Roll::Range range, const SkinColorId &skinColorId);
 
 // Hair Color
 // ------------------------------------------------------------------------------------------------------------------
-enum hair_color_id_t
-{
-    hc_null,
-    hc_blonde,
-    hc_brown,
-    hc_red,
-    hc_black,
-    hc_dark_red,
-    hc_grey,
-    hc_golden_blonde,
-    hc_silver_white,
-    hc_light_brown,
-    hc_green,
-    hc_dark_brown,
-    hc_white,
-    hc_orange
-};
+ENUM(HairColorId,
+     hc_nil,
+     hc_blonde,
+     hc_brown,
+     hc_red,
+     hc_black,
+     hc_dark_red,
+     hc_grey,
+     hc_golden_blonde,
+     hc_silver_white,
+     hc_light_brown,
+     hc_green,
+     hc_dark_brown,
+     hc_white,
+     hc_orange);
 
-using hair_color_t = Roll::RollItem<hair_color_id_t>;
+using HairColor = Roll::RollItem<HairColorId>;
 
-using hair_color_roll_list_t = Roll::RollVector<hair_color_t>;
-using hair_color_matcher_t = Roll::RollMatcher<hair_color_t>;
+using HairColorRollList = Roll::RollList<HairColor>;
+using HairColorMatcher = Roll::RollMatcher<HairColor>;
 
-hair_color_matcher_t create_hair_color_matcher(const Roll::Range range, const hair_color_id_t id);
+HairColorMatcher createHairColorMatcher(const Roll::Range range, const HairColorId id);
 
 // Eye Color --------------------------------------------------------
+ENUM(EyeColorId,
+     ec_nil,
+     ec_blue,
+     ec_green,
+     ec_grey,
+     ec_brown,
+     ec_hazel,
+     ec_black,
+     ec_amber,
+     ec_red,
+     ec_orange,
+     ec_gold,
+     ec_yellow);
 
-enum eye_color_id_t
-{
-    ec_null,
-    ec_blue,
-    ec_green,
-    ec_grey,
-    ec_brown,
-    ec_hazel,
-    ec_black,
-    ec_amber,
-    ec_red,
-    ec_orange,
-    ec_gold,
-    ec_yellow
-};
+using EyeColor = Roll::RollItem<EyeColorId>;
 
-using eye_color_t = Roll::RollItem<eye_color_id_t>;
+using EyeColorRollList = Roll::RollList<EyeColor>;
+using EyeColorMatcher = Roll::RollMatcher<EyeColor>;
 
-using eye_color_roll_list_t = Roll::RollVector<eye_color_t>;
-using eye_color_matcher_t = Roll::RollMatcher<eye_color_t>;
-
-eye_color_matcher_t create_eye_color_matcher(const Roll::Range range, const eye_color_id_t id);
+EyeColorMatcher createEyeColorMatcher(const Roll::Range range, const EyeColorId id);
 
 // Fur Pattern --------------------------------------------------------
-enum fur_pattern_id_t { fp_null, fp_striped, fp_spotted, fp_solid, fp_tabby };
+ENUM(FurPatternId, fp_nil, fp_striped, fp_spotted, fp_solid, fp_tabby);
 
-using fur_pattern_t = Roll::RollItem<fur_pattern_id_t>;
+using FurPattern = Roll::RollItem<FurPatternId>;
 
-using fur_pattern_roll_list_t = Roll::RollVector<fur_pattern_t>;
-using fur_pattern_matcher_t = Roll::RollMatcher<fur_pattern_t>;
+using FurPatternRollList = Roll::RollList<FurPattern>;
+using FurPatternMatcher = Roll::RollMatcher<FurPattern>;
 
-fur_pattern_matcher_t create_fur_pattern_matcher(const Roll::Range range, const fur_pattern_id_t id);
+FurPatternMatcher createFurPatternMatcher(const Roll::Range range, const FurPatternId id);
 
 // Scale Color --------------------------------------------------------
-enum scale_color_id_t
-{
-    scl_null,
-    scl_dark_green,
-    scl_olive,
-    scl_brown,
-    scl_grey
-};
+ENUM(ScaleColorId, scl_null, scl_dark_green, scl_olive, scl_brown, scl_grey);
 
-using scale_color_t = Roll::RollItem<scale_color_id_t>;
+using ScaleColor = Roll::RollItem<ScaleColorId>;
 
-using scale_color_roll_list_t = Roll::RollVector<scale_color_t>;
-using scale_color_matcher_t = Roll::RollMatcher<scale_color_t>;
+using ScaleColorRollList = Roll::RollList<ScaleColor>;
+using ScaleColorMatcher = Roll::RollMatcher<ScaleColor>;
 
-scale_color_matcher_t create_scale_color_matcher(const Roll::Range range, const scale_color_id_t id);
+ScaleColorMatcher createScaleColorMatcher(const Roll::Range range, const ScaleColorId id);
 
 // Horn Type --------------------------------------------------------
-enum horn_type_id_t { ht_null, ht_none, ht_spiked, ht_curved, ht_both };
+ENUM(HornTypeId, ht_null, ht_none, ht_spiked, ht_curved, ht_both);
 
-using horn_type_t = Roll::RollItem<horn_type_id_t>;
+using HornType = Roll::RollItem<HornTypeId>;
 
-using horn_type_roll_list_t = Roll::RollVector<horn_type_t>;
-using horn_type_matcher_t = Roll::RollMatcher<horn_type_t>;
+using HornTypeRollList = Roll::RollList<HornType>;
+using HornTypeMatcher = Roll::RollMatcher<HornType>;
 
-horn_type_matcher_t create_horn_type_matcher(const Roll::Range range, const horn_type_id_t id);
+HornTypeMatcher createHornTypeMatcher(const Roll::Range range, const HornTypeId id);
 
 // Race
 // ------------------------------------------------------------------------------------------------------------------
-enum race_id_t
-{
-    r_nord,
-    r_imperial,
-    r_breton,
-    r_dunmer,
-    r_altmer,
-    r_orsimer,
-    r_redguard,
-    r_bosmer,
-    r_khajiit,
-    r_argonian
-};
+ENUM(RaceId,
+     r_nord,
+     r_imperial,
+     r_breton,
+     r_dunmer,
+     r_altmer,
+     r_orsimer,
+     r_redguard,
+     r_bosmer,
+     r_khajiit,
+     r_argonian);
 
-class race_t : public Roll::RollItem<race_id_t>
+class Race : public Roll::RollItem<RaceId>
 {
 public:
-    race_t(const race_id_t& i_id, const TAS::String& i_display_name,
-           archetype_roll_list_t archetype_roll_list,
-           skin_color_roll_list_t skin_color_roll_list,
-           hair_color_roll_list_t hair_color_roll_list,
-           eye_color_roll_list_t eye_color_roll_list,
-           fur_pattern_roll_list_t fur_pattern_roll_list,
-           scale_color_roll_list_t scale_color_roll_list,
-           horn_type_roll_list_t horn_type_roll_list);
+    Race(const RaceId &id,
+         const Aliases::String &displayName,
+         ArchetypeRollList archetypeRollList,
+         SkinColorRollList skinColorRollList,
+         HairColorRollList hairColorRollList,
+         EyeColorRollList eyeColorRollList,
+         FurPatternRollList furPatternRollList,
+         ScaleColorRollList scaleColorRollList,
+         HornTypeRollList hornTypeRollList);
 
-    archetype_t roll_archetype() const;
+    Archetype rollArchetype() const;
 
-    skin_color_t roll_skin_color() const;
+    SkinColor rollSkinColor() const;
 
-    hair_color_t roll_hair_color() const;
+    HairColor rollHairColor() const;
 
-    eye_color_t roll_eye_color() const;
+    EyeColor rollEyeColor() const;
 
-    fur_pattern_t roll_fur_pattern() const;
+    FurPattern rollFurPattern() const;
 
-    scale_color_t roll_scale_color() const;
+    ScaleColor rollScaleColor() const;
 
-    horn_type_t roll_horn_type() const;
+    HornType rollHornType() const;
 
 private:
-    archetype_roll_list_t archetype_roll_list_;
-    skin_color_roll_list_t skin_color_roll_list_;
-    hair_color_roll_list_t hair_color_roll_list_;
-    eye_color_roll_list_t eye_color_roll_list_;
-    fur_pattern_roll_list_t fur_pattern_roll_list_;
-    scale_color_roll_list_t scale_color_roll_list_;
-    horn_type_roll_list_t horn_type_roll_list_;
+    ArchetypeRollList archetypeRollList_;
+    SkinColorRollList skinColorRollList_;
+    HairColorRollList hairColorRollList_;
+    EyeColorRollList eyeColorRollList_;
+    FurPatternRollList furPatternRollList_;
+    ScaleColorRollList scaleColorRollList_;
+    HornTypeRollList hornTypeRollList_;
 };
 
-using race_roll_list_t = Roll::RollArray<race_t, 10>;
-using race_roll_matcher_t = Roll::RollMatcher<race_t>;
+using RaceRollList = Roll::RollList<Race>;
+using RaceRollMatcher = Roll::RollMatcher<Race>;
 
-const race_roll_list_t& get_race_roll_list();;
+const RaceRollList &getRaceRollList();
 
-
-TAS::String generate_character_text();
-
+Aliases::String generateCharacterText();
 }
 
 

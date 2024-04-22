@@ -16,7 +16,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_generateCharacterButton_clicked()
 {
-    const TAS::String text = CharGen::generate_character_text();
+    const Aliases::String text = CharGen::generateCharacterText();
     ui->characterSheetTextBrowser->setText(text);
 }
 

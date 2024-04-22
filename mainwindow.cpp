@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "character_generator.h"
+#include "character_gen.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,7 +16,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_generateCharacterButton_clicked()
 {
-    const type_aliases::string_t text = char_gen::generate_character_text();
+    const TAS::String text = CharGen::generate_character_text();
     ui->characterSheetTextBrowser->setText(text);
 }
 

@@ -2,7 +2,6 @@
 #include <QClipboard>
 #include "./ui_mainwindow.h"
 #include "character_gen.h"
-// #include "logging.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)

@@ -1,6 +1,7 @@
 #ifndef CHARACTER_GEN_H
 #define CHARACTER_GEN_H
 
+#include "charactersheet.h"
 #include "roll.h"
 #include "types.h"
 
@@ -384,56 +385,6 @@ using RaceRollList = Roll::RollList<Race>;
 using RaceRollMatcher = Roll::RollMatcher<Race>;
 
 const RaceRollList &getRaceRollList();
-
-class Attribute
-{
-public:
-    Attribute(const Types::String &label, const Types::Uint8 &id, const Types::String &displayName);
-
-    Attribute(const Attribute &attr);
-
-    Attribute();
-
-    Types::String getDisplayName() const;
-    Types::Uint8 getId() const;
-    Types::String getLabel() const;
-
-protected:
-private:
-    Types::String displayName_;
-    Types::Uint8 id_;
-    Types::String label_;
-};
-
-template<class Tid>
-Attribute createAttribute(const Roll::RollItem<Tid> &item)
-{
-    return Attribute(item.getLabel(),
-                     static_cast<Types::Uint8>(item.getId()),
-                     item.getDisplayName());
-}
-
-class CharacterSheet
-{
-private:
-    using AttrVector = Types::Vector<Attribute>;
-    AttrVector attrVector_;
-
-public:
-    using Iterator = AttrVector::Iterator;
-
-    CharacterSheet();
-
-    Iterator begin();
-
-    Iterator end();
-
-    void insertAttribute(const Attribute attr);
-
-    Types::Size attributeCount() const;
-
-    Types::String toText();
-};
 
 CharacterSheet generateCharacterSheet();
 

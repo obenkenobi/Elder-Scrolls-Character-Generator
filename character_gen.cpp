@@ -756,78 +756,6 @@ const RaceRollList &getRaceRollList()
     return list;
 }
 
-Attribute::Attribute(const Types::String &label,
-                     const Types::Uint8 &id,
-                     const Types::String &displayName)
-    : label_(label)
-    , id_(id)
-    , displayName_(displayName)
-{}
-
-Attribute::Attribute(const Attribute &attr)
-    : label_(attr.label_)
-    , id_(attr.id_)
-    , displayName_(attr.displayName_)
-{}
-
-Attribute::Attribute()
-    : label_("NULL")
-    , id_(0)
-    , displayName_("NULL")
-{}
-
-Types::String Attribute::getDisplayName() const
-{
-    return displayName_;
-}
-
-Types::Uint8 Attribute::getId() const
-{
-    return id_;
-}
-
-Types::String Attribute::getLabel() const
-{
-    return label_;
-}
-
-CharacterSheet::CharacterSheet()
-    : attrVector_(AttrVector())
-{}
-
-CharacterSheet::Iterator CharacterSheet::begin()
-{
-    return attrVector_.begin();
-}
-
-CharacterSheet::Iterator CharacterSheet::end()
-{
-    return attrVector_.end();
-}
-
-void CharacterSheet::insertAttribute(const Attribute attr)
-{
-    this->attrVector_.push_back(attr);
-}
-
-Types::Size CharacterSheet::attributeCount() const
-{
-    return this->attrVector_.size();
-}
-
-Types::String CharacterSheet::toText()
-{
-    Types::String character_text = "<table>";
-
-    for (auto i = this->attrVector_.begin(); i != this->attrVector_.end(); i++) {
-        Attribute attr = *i;
-        character_text += "<tr><td><b>" + attr.getLabel() + "</b></td><td>" + attr.getDisplayName()
-                          + "</td></tr>";
-    }
-    character_text += "<table>";
-    return character_text;
-}
-
 Archetype _rollArchetype(const BirthSign &birthSign, const Race &race)
 {
     static const Types::String logFormat = "Archetype based on [%1] [%2] so the archetype is [%3]";
@@ -845,7 +773,7 @@ Archetype _rollArchetype(const BirthSign &birthSign, const Race &race)
 
 CharacterSheet generateCharacterSheet()
 {
-    LOG_INFO << "__________Begin rolling character__________";
+    LOG_INFO << "__________Begin rolling for character__________";
     CharacterSheet sheet = CharacterSheet();
 
     const RaceRollList &raceRollList = getRaceRollList();
@@ -907,6 +835,9 @@ CharacterSheet generateCharacterSheet()
     sheet.insertAttribute(createAttribute(eyeColor));
 
     LOG_INFO << "__________Finished rolling character__________";
+
+    LOG_INFO << "New Character Sheet";
+    LOG_INFO << sheet.toString();
     return sheet;
 }
 

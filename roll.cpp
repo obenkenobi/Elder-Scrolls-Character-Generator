@@ -28,10 +28,10 @@ Range::Range()
     , end_(-1)
 {}
 
-Aliases::String Range::toString()
+Types::String Range::toString()
 {
     if (stringValue_.isEmpty()) {
-        stringValue_ = Aliases::String("%1-%2").arg(start_).arg(end_);
+        stringValue_ = Types::String("%1-%2").arg(start_).arg(end_);
     }
     return stringValue_;
 }

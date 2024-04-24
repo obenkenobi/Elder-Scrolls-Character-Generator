@@ -20,6 +20,8 @@ public:
 private slots:
     void on_generateCharacterButton_clicked();
 
+    void on_copyButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

@@ -5,7 +5,7 @@
 
 namespace CharGen {
 
-Aliases::String Archetype::getLabel() const
+Types::String Archetype::getLabel() const
 {
     return LABEL_;
 }
@@ -40,7 +40,7 @@ ArchetypeRollList createArchetypeRollList(const MageRange mageRange,
     };
 }
 
-Aliases::String RpgClass::getLabel() const
+Types::String RpgClass::getLabel() const
 {
     return LABEL_;
 }
@@ -125,7 +125,7 @@ const RpgClassRollList &createRpgClassRollList(const ArchetypeId archetypeId)
 
 BirthSign::BirthSign(const BirthSignId id,
                      const ArchetypeId archetypeId,
-                     const Aliases::String &displayName)
+                     const Types::String &displayName)
     : RollItem(id, displayName)
     , archetypeId_(archetypeId)
 {}
@@ -139,7 +139,7 @@ bool BirthSign::rollIfArchetypeBasedOnBirthSign() const
     return false;
 }
 
-Aliases::String BirthSign::getLabel() const
+Types::String BirthSign::getLabel() const
 {
     return LABEL_;
 }
@@ -187,12 +187,12 @@ bool Sex::isTranssexual() const
     return isTranssexual_;
 }
 
-Sex::Sex(SexId id, Aliases::String displayName, bool isTranssexual)
+Sex::Sex(SexId id, Types::String displayName, bool isTranssexual)
     : RollItem(id, displayName)
     , isTranssexual_(isTranssexual)
 {}
 
-Aliases::String Sex::getLabel() const
+Types::String Sex::getLabel() const
 {
     return LABEL_;
 }
@@ -202,16 +202,16 @@ Sex rollForSex()
     static const auto sexRange = Roll::Range(1, 50);
     const Roll::RollUint sexIdRollNum = Roll::rollRandNumber();
     const SexId sexId = sexRange.inRollRangeInclusive(sexIdRollNum) ? male : female;
-    const Aliases::String sexString = sexId == male ? "Man" : "Woman";
+    const Types::String sexString = sexId == male ? "Man" : "Woman";
 
     static const auto transRange = Roll::Range(100, 100);
     const Roll::RollUint transRollNum = Roll::rollRandNumber();
     static bool isTrans = transRange.inRollRangeInclusive(transRollNum);
-    const Aliases::String transStatusString = !isTrans ? "" : "Transsexual ";
+    const Types::String transStatusString = !isTrans ? "" : "Transsexual ";
 
-    const Aliases::String displayName = transStatusString + sexString;
+    const Types::String displayName = transStatusString + sexString;
 
-    LOG_DEBUG << Aliases::String("Rolled for sex [%1] with sex roll %2 and trans roll %3")
+    LOG_DEBUG << Types::String("Rolled for sex [%1] with sex roll %2 and trans roll %3")
                      .arg(displayName)
                      .arg(sexIdRollNum)
                      .arg(transRollNum);
@@ -219,7 +219,7 @@ Sex rollForSex()
     return Sex(sexId, displayName, isTrans);
 }
 
-Aliases::String Sexuality::getLabel() const
+Types::String Sexuality::getLabel() const
 {
     return LABEL_;
 }
@@ -245,7 +245,7 @@ const SexualitiesRollList &createSexualitiesRollList(const SexId sexId)
     return maleList;
 }
 
-Aliases::String SkinColor::getLabel() const
+Types::String SkinColor::getLabel() const
 {
     return LABEL_;
 }
@@ -293,7 +293,7 @@ SkinColorMatcher createSkinColorMatcher(const Roll::Range range, const SkinColor
     return SkinColorMatcher{range, nil};
 }
 
-Aliases::String HairColor::getLabel() const
+Types::String HairColor::getLabel() const
 {
     return LABEL_;
 }
@@ -348,7 +348,7 @@ HairColorMatcher createHairColorMatcher(const Roll::Range range, const HairColor
     return HairColorMatcher{range, nil};
 }
 
-Aliases::String EyeColor::getLabel() const
+Types::String EyeColor::getLabel() const
 {
     return LABEL_;
 }
@@ -397,7 +397,7 @@ EyeColorMatcher createEyeColorMatcher(const Roll::Range range, const EyeColorId 
     return EyeColorMatcher{range, nil};
 }
 
-Aliases::String FurPattern::getLabel() const
+Types::String FurPattern::getLabel() const
 {
     return LABEL_;
 }
@@ -425,7 +425,7 @@ FurPatternMatcher createFurPatternMatcher(const Roll::Range range, const FurPatt
     return FurPatternMatcher{range, nil};
 }
 
-Aliases::String ScaleColor::getLabel() const
+Types::String ScaleColor::getLabel() const
 {
     return LABEL_;
 }
@@ -453,7 +453,7 @@ ScaleColorMatcher createScaleColorMatcher(const Roll::Range range, const ScaleCo
     return ScaleColorMatcher{range, null};
 }
 
-Aliases::String HornType::getLabel() const
+Types::String HornType::getLabel() const
 {
     return LABEL_;
 }
@@ -482,7 +482,7 @@ HornTypeMatcher createHornTypeMatcher(const Roll::Range range, const HornTypeId 
 }
 
 Race::Race(const RaceId &id,
-           const Aliases::String &displayName,
+           const Types::String &displayName,
            ArchetypeRollList archetypeRollList,
            SkinColorRollList skinColorRollList,
            HairColorRollList hairColorRollList,
@@ -500,7 +500,7 @@ Race::Race(const RaceId &id,
     , hornTypeRollList_(std::move(hornTypeRollList))
 {}
 
-Aliases::String Race::getLabel() const
+Types::String Race::getLabel() const
 {
     return LABEL_;
 }
@@ -756,9 +756,9 @@ const RaceRollList &getRaceRollList()
     return list;
 }
 
-Attribute::Attribute(const Aliases::String &label,
-                     const Aliases::Uint8 &id,
-                     const Aliases::String &displayName)
+Attribute::Attribute(const Types::String &label,
+                     const Types::Uint8 &id,
+                     const Types::String &displayName)
     : label_(label)
     , id_(id)
     , displayName_(displayName)
@@ -776,17 +776,17 @@ Attribute::Attribute()
     , displayName_("NULL")
 {}
 
-Aliases::String Attribute::getDisplayName() const
+Types::String Attribute::getDisplayName() const
 {
     return displayName_;
 }
 
-Aliases::Uint8 Attribute::getId() const
+Types::Uint8 Attribute::getId() const
 {
     return id_;
 }
 
-Aliases::String Attribute::getLabel() const
+Types::String Attribute::getLabel() const
 {
     return label_;
 }
@@ -795,12 +795,12 @@ CharacterSheet::CharacterSheet()
     : attrVector_(AttrVector())
 {}
 
-inline CharacterSheet::Iterator CharacterSheet::begin()
+CharacterSheet::Iterator CharacterSheet::begin()
 {
     return attrVector_.begin();
 }
 
-inline CharacterSheet::Iterator CharacterSheet::end()
+CharacterSheet::Iterator CharacterSheet::end()
 {
     return attrVector_.end();
 }
@@ -810,9 +810,14 @@ void CharacterSheet::insertAttribute(const Attribute attr)
     this->attrVector_.push_back(attr);
 }
 
-Aliases::String CharacterSheet::toText()
+Types::Size CharacterSheet::attributeCount() const
 {
-    Aliases::String character_text = "<table>";
+    return this->attrVector_.size();
+}
+
+Types::String CharacterSheet::toText()
+{
+    Types::String character_text = "<table>";
 
     for (auto i = this->attrVector_.begin(); i != this->attrVector_.end(); i++) {
         Attribute attr = *i;
@@ -825,8 +830,7 @@ Aliases::String CharacterSheet::toText()
 
 Archetype _rollArchetype(const BirthSign &birthSign, const Race &race)
 {
-    static const Aliases::String logFormat
-        = "Archetype based on [%1] [%2] so the archetype is [%3]";
+    static const Types::String logFormat = "Archetype based on [%1] [%2] so the archetype is [%3]";
     const bool isArchetypeBasedOnBirthSign = birthSign.rollIfArchetypeBasedOnBirthSign();
     if (isArchetypeBasedOnBirthSign) {
         Archetype archetypeBsign = createArchetype(birthSign.getArchetypeId());
@@ -841,6 +845,7 @@ Archetype _rollArchetype(const BirthSign &birthSign, const Race &race)
 
 CharacterSheet generateCharacterSheet()
 {
+    LOG_INFO << "__________Begin rolling character__________";
     CharacterSheet sheet = CharacterSheet();
 
     const RaceRollList &raceRollList = getRaceRollList();
@@ -901,6 +906,7 @@ CharacterSheet generateCharacterSheet()
     const EyeColor eyeColor = race.rollEyeColor();
     sheet.insertAttribute(createAttribute(eyeColor));
 
+    LOG_INFO << "__________Finished rolling character__________";
     return sheet;
 }
 

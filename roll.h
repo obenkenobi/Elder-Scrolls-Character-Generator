@@ -2,12 +2,12 @@
 #define ROLL_H
 // #define DEBUG
 
-#include "aliases.h"
 #include "logging.h"
+#include "types.h"
 
 namespace Roll {
 
-using RollUint = Aliases::Uint8;
+using RollUint = Types::Uint8;
 
 RollUint rollRandNumber();
 
@@ -19,12 +19,12 @@ public:
 
     Range();
 
-    Aliases::String toString();
+    Types::String toString();
 
 private:
     RollUint start_;
     RollUint end_;
-    Aliases::String stringValue_ = "";
+    Types::String stringValue_ = "";
 };
 
 template <class T> class RollMatcher {
@@ -47,11 +47,11 @@ private:
 
 template <class T> class RollList {
 private:
-    Aliases::Vector<RollMatcher<T>> matcherVector_;
+    Types::Vector<RollMatcher<T>> matcherVector_;
 
 public:
-    RollList(Aliases::InitializerList<RollMatcher<T>> initializerList)
-        : matcherVector_(Aliases::Vector<RollMatcher<T>>(std::move(initializerList)))
+    RollList(Types::InitializerList<RollMatcher<T>> initializerList)
+        : matcherVector_(Types::Vector<RollMatcher<T>>(std::move(initializerList)))
     {
         // LOG_DEBUG << "Created " + toString();
     }
@@ -62,7 +62,7 @@ public:
             RollMatcher<T> rollMatcher = *i;
             if (rollMatcher.match(rolledNum)) {
                 const T item = rollMatcher.getMatchedItem();
-                LOG_INFO << Aliases::String(
+                LOG_INFO << Types::String(
                                 "Rolled [%1] with result [%2] with roll number [%3] in range %4")
                                 .arg(item.getLabel())
                                 .arg(item.getDisplayName())
@@ -76,10 +76,10 @@ public:
         return lastItem;
     }
 
-    Aliases::String toString()
+    Types::String toString()
     {
-        Aliases::String label = matcherVector_.at(0).getMatchedItem().getLabel();
-        Aliases::String listPrintString = "RollList with Label [" + label + "] and contents (";
+        Types::String label = matcherVector_.at(0).getMatchedItem().getLabel();
+        Types::String listPrintString = "RollList with Label [" + label + "] and contents (";
         for (auto i = matcherVector_.begin(); i != matcherVector_.end(); i++) {
             if (i != matcherVector_.begin()) {
                 listPrintString += ", ";
@@ -95,20 +95,22 @@ template<class Tid>
 class RollItem
 {
 public:
-    explicit RollItem(Tid id, Aliases::String display_name)
-        : id_(id), displayName_(std::move(display_name)) {}
+    explicit RollItem(Tid id, Types::String display_name)
+        : id_(id)
+        , displayName_(std::move(display_name))
+    {}
 
-    Aliases::String getDisplayName() const { return displayName_; }
+    Types::String getDisplayName() const { return displayName_; }
 
     Tid getId() const { return id_; }
 
-    virtual Aliases::String getLabel() const = 0;
+    virtual Types::String getLabel() const = 0;
 
 protected:
     Tid id_;
 
 private:
-    Aliases::String displayName_;
+    Types::String displayName_;
 };
 
 } // namespace Roll

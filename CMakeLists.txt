@@ -23,7 +23,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(elder-scrolls-character-generator
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        aliases.h
+        types.h
         roll.h roll.cpp
         character_gen.h character_gen.cpp
         logging.h

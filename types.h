@@ -1,5 +1,5 @@
-#ifndef ALIASES_H
-#define ALIASES_H
+#ifndef TYPES_H
+#define TYPES_H
 
 #include <QMap>
 #include <QString>
@@ -7,10 +7,11 @@
 #include <QtTypes>
 #include <initializer_list>
 
-namespace Aliases {
+namespace Types {
 
 using String = QString;
 using Uint8 = quint8;
+using Size = qsizetype;
 
 template <class T> using Vector = QVector<T>;
 
@@ -19,5 +20,5 @@ using Map = QMap<K, V>;
 
 template <class T> using InitializerList = std::initializer_list<T>;
 
-} // namespace Aliases
-#endif // ALIASES_H
+} // namespace Types
+#endif // TYPES_H

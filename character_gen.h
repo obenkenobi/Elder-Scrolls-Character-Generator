@@ -1,8 +1,8 @@
 #ifndef CHARACTER_GEN_H
 #define CHARACTER_GEN_H
 
-#include "aliases.h"
 #include "roll.h"
+#include "types.h"
 
 namespace CharGen {
 // Archetype
@@ -13,12 +13,12 @@ enum ArchetypeId { a_mage, a_thief, a_warrior, a_any };
 class Archetype : public Roll::RollItem<ArchetypeId>
 {
 private:
-    static inline const Aliases::String LABEL_ = "Archetype";
+    static inline const Types::String LABEL_ = "Archetype";
 
 public:
     using Roll::RollItem<ArchetypeId>::RollItem;
 
-    Aliases::String getLabel() const;
+    Types::String getLabel() const;
 };
 
 Archetype createArchetype(const ArchetypeId id);
@@ -63,12 +63,12 @@ enum RpgClassId {
 class RpgClass : public Roll::RollItem<RpgClassId>
 {
 private:
-    static inline const Aliases::String LABEL_ = "Class";
+    static inline const Types::String LABEL_ = "Class";
 
 public:
     using Roll::RollItem<RpgClassId>::RollItem;
 
-    Aliases::String getLabel() const;
+    Types::String getLabel() const;
 };
 
 using RpgClassRollList = Roll::RollList<RpgClass>;
@@ -104,18 +104,16 @@ enum BirthSignId {
 class BirthSign : public Roll::RollItem<BirthSignId>
 {
 public:
-    BirthSign(const BirthSignId id,
-              const ArchetypeId archetypeId,
-              const Aliases::String &displayName);
+    BirthSign(const BirthSignId id, const ArchetypeId archetypeId, const Types::String &displayName);
 
     bool rollIfArchetypeBasedOnBirthSign() const;
 
-    Aliases::String getLabel() const;
+    Types::String getLabel() const;
 
     ArchetypeId getArchetypeId() const;
 
 private:
-    static inline const Aliases::String LABEL_ = "Birthsign";
+    static inline const Types::String LABEL_ = "Birthsign";
     ArchetypeId archetypeId_;
 };
 
@@ -137,13 +135,13 @@ enum SexId { male, female };
 class Sex : public Roll::RollItem<SexId>
 {
 private:
-    static inline const Aliases::String LABEL_ = "Sex";
+    static inline const Types::String LABEL_ = "Sex";
     bool isTranssexual_;
 
 public:
-    Sex(SexId id, Aliases::String displayName, bool isTranssexual);
+    Sex(SexId id, Types::String displayName, bool isTranssexual);
 
-    Aliases::String getLabel() const;
+    Types::String getLabel() const;
     bool isTranssexual() const;
 };
 
@@ -157,11 +155,11 @@ enum SexualityId { heterosexual, bisexual, homosexual };
 class Sexuality : public Roll::RollItem<SexualityId>
 {
 private:
-    static inline const Aliases::String LABEL_ = "Sexuality";
+    static inline const Types::String LABEL_ = "Sexuality";
 
 public:
     using Roll::RollItem<SexualityId>::RollItem;
-    Aliases::String getLabel() const;
+    Types::String getLabel() const;
 };
 
 using SexualitiesRollList = Roll::RollList<Sexuality>;
@@ -190,12 +188,12 @@ enum SkinColorId {
 class SkinColor : public Roll::RollItem<SkinColorId>
 {
 private:
-    static inline const Aliases::String LABEL_ = "Skin Color";
+    static inline const Types::String LABEL_ = "Skin Color";
 
 public:
     using Roll::RollItem<SkinColorId>::RollItem;
 
-    Aliases::String getLabel() const;
+    Types::String getLabel() const;
 };
 
 using SkinColorRollList = Roll::RollList<SkinColor>;
@@ -226,11 +224,11 @@ enum HairColorId {
 class HairColor : public Roll::RollItem<HairColorId>
 {
 private:
-    static inline const Aliases::String LABEL_ = "Hair Color";
+    static inline const Types::String LABEL_ = "Hair Color";
 
 public:
     using Roll::RollItem<HairColorId>::RollItem;
-    Aliases::String getLabel() const;
+    Types::String getLabel() const;
 };
 
 using HairColorRollList = Roll::RollList<HairColor>;
@@ -258,11 +256,11 @@ enum EyeColorId {
 class EyeColor : public Roll::RollItem<EyeColorId>
 {
 private:
-    static inline const Aliases::String LABEL_ = "Eye Color";
+    static inline const Types::String LABEL_ = "Eye Color";
 
 public:
     using Roll::RollItem<EyeColorId>::RollItem;
-    Aliases::String getLabel() const;
+    Types::String getLabel() const;
 };
 
 using EyeColorRollList = Roll::RollList<EyeColor>;
@@ -277,11 +275,11 @@ enum FurPatternId { fp_nil, fp_striped, fp_spotted, fp_solid, fp_tabby };
 class FurPattern : public Roll::RollItem<FurPatternId>
 {
 private:
-    static inline const Aliases::String LABEL_ = "Fur Pattern";
+    static inline const Types::String LABEL_ = "Fur Pattern";
 
 public:
     using Roll::RollItem<FurPatternId>::RollItem;
-    Aliases::String getLabel() const;
+    Types::String getLabel() const;
 };
 
 using FurPatternRollList = Roll::RollList<FurPattern>;
@@ -296,11 +294,11 @@ enum ScaleColorId { scl_null, scl_dark_green, scl_olive, scl_brown, scl_grey };
 class ScaleColor : public Roll::RollItem<ScaleColorId>
 {
 private:
-    static inline const Aliases::String LABEL_ = "Scale Color";
+    static inline const Types::String LABEL_ = "Scale Color";
 
 public:
     using Roll::RollItem<ScaleColorId>::RollItem;
-    Aliases::String getLabel() const;
+    Types::String getLabel() const;
 };
 
 using ScaleColorRollList = Roll::RollList<ScaleColor>;
@@ -314,11 +312,11 @@ enum HornTypeId { ht_null, ht_none, ht_spiked, ht_curved, ht_both };
 class HornType : public Roll::RollItem<HornTypeId>
 {
 private:
-    static inline const Aliases::String LABEL_ = "Horn Type";
+    static inline const Types::String LABEL_ = "Horn Type";
 
 public:
     using Roll::RollItem<HornTypeId>::RollItem;
-    Aliases::String getLabel() const;
+    Types::String getLabel() const;
 };
 
 using HornTypeRollList = Roll::RollList<HornType>;
@@ -346,7 +344,7 @@ class Race : public Roll::RollItem<RaceId>
 {
 public:
     Race(const RaceId &id,
-         const Aliases::String &displayName,
+         const Types::String &displayName,
          ArchetypeRollList archetypeRollList,
          SkinColorRollList skinColorRollList,
          HairColorRollList hairColorRollList,
@@ -355,7 +353,7 @@ public:
          ScaleColorRollList scaleColorRollList,
          HornTypeRollList hornTypeRollList);
 
-    Aliases::String getLabel() const;
+    Types::String getLabel() const;
 
     Archetype rollArchetype() const;
 
@@ -379,7 +377,7 @@ private:
     FurPatternRollList furPatternRollList_;
     ScaleColorRollList scaleColorRollList_;
     HornTypeRollList hornTypeRollList_;
-    static inline const Aliases::String LABEL_ = "Race";
+    static inline const Types::String LABEL_ = "Race";
 };
 
 using RaceRollList = Roll::RollList<Race>;
@@ -390,37 +388,35 @@ const RaceRollList &getRaceRollList();
 class Attribute
 {
 public:
-    Attribute(const Aliases::String &label,
-              const Aliases::Uint8 &id,
-              const Aliases::String &displayName);
+    Attribute(const Types::String &label, const Types::Uint8 &id, const Types::String &displayName);
 
     Attribute(const Attribute &attr);
 
     Attribute();
 
-    Aliases::String getDisplayName() const;
-    Aliases::Uint8 getId() const;
-    Aliases::String getLabel() const;
+    Types::String getDisplayName() const;
+    Types::Uint8 getId() const;
+    Types::String getLabel() const;
 
 protected:
 private:
-    Aliases::String displayName_;
-    Aliases::Uint8 id_;
-    Aliases::String label_;
+    Types::String displayName_;
+    Types::Uint8 id_;
+    Types::String label_;
 };
 
 template<class Tid>
 Attribute createAttribute(const Roll::RollItem<Tid> &item)
 {
     return Attribute(item.getLabel(),
-                     static_cast<Aliases::Uint8>(item.getId()),
+                     static_cast<Types::Uint8>(item.getId()),
                      item.getDisplayName());
 }
 
 class CharacterSheet
 {
 private:
-    using AttrVector = Aliases::Vector<Attribute>;
+    using AttrVector = Types::Vector<Attribute>;
     AttrVector attrVector_;
 
 public:
@@ -434,8 +430,9 @@ public:
 
     void insertAttribute(const Attribute attr);
 
-    Aliases::String toText();
+    Types::Size attributeCount() const;
 
+    Types::String toText();
 };
 
 CharacterSheet generateCharacterSheet();

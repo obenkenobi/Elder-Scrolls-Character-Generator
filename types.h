@@ -2,6 +2,7 @@
 #define TYPES_H
 
 #include <QMap>
+#include <QPointer>
 #include <QString>
 #include <QVector>
 #include <QtTypes>
@@ -19,6 +20,15 @@ template<class K, class V>
 using Map = QMap<K, V>;
 
 template <class T> using InitializerList = std::initializer_list<T>;
+
+template<class T>
+using UniquePtr = QScopedPointer<T>;
+
+template<class T>
+using SharedPtr = QSharedPointer<T>;
+
+template<class T>
+using WeakPtr = QWeakPointer<T>;
 
 } // namespace Types
 #endif // TYPES_H

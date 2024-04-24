@@ -1,7 +1,7 @@
-#ifndef CHARACTER_GEN_H
-#define CHARACTER_GEN_H
+#ifndef CHARGEN_ROLLS_H
+#define CHARGEN_ROLLS_H
 
-#include "charactersheet.h"
+#include "chargen_charactersheet.h"
 #include "roll.h"
 #include "types.h"
 
@@ -386,8 +386,8 @@ using RaceRollMatcher = Roll::RollMatcher<Race>;
 
 const RaceRollList &getRaceRollList();
 
-CharacterSheet generateCharacterSheet();
+void rollForCharacterSheet(Types::WeakPtr<CharacterSheet>);
 
 } // namespace CharGen
 
-#endif // CHARACTER_GEN_H
+#endif // CHARGEN_ROLLS_H

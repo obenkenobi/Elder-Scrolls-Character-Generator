@@ -25,10 +25,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         types.h
         roll.h roll.cpp
-        character_gen.h character_gen.cpp
+        chargen_rolls.h chargen_rolls.cpp
         logging.h
-        attribute.h attribute.cpp
-        charactersheet.h charactersheet.cpp
+        chargen_attribute.h chargen_attribute.cpp
+        chargen_charactersheet.h chargen_charactersheet.cpp
+        services_charactersvc.h services_charactersvc.cpp
 
     )
 # Define target properties for Android with Qt 6 as:

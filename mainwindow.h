@@ -2,12 +2,17 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPointer>
+#include "chargen_charactersheet.h"
+#include "types.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
-}
+} // namespace Ui
 QT_END_NAMESPACE
+
+class MainWindowData;
 
 class MainWindow : public QMainWindow
 {
@@ -17,6 +22,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+signals:
+    void reqGenCharacterSignal();
+    void reqCopyCharacterToClipboardSignal();
+public slots:
+    void onCharacterGenerated(Types::WeakPtr<CharGen::CharacterSheet>);
 private slots:
     void on_generateCharacterButton_clicked();
 
@@ -24,5 +34,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QSharedDataPointer<MainWindowData> data;
 };
 #endif // MAINWINDOW_H

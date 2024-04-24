@@ -1,4 +1,4 @@
-#include "character_gen.h"
+#include "chargen_rolls.h"
 #include "logging.h"
 #include <stdexcept>
 #include <utility>
@@ -771,74 +771,79 @@ Archetype _rollArchetype(const BirthSign &birthSign, const Race &race)
     return rolledArchetype;
 }
 
-CharacterSheet generateCharacterSheet()
+void rollForCharacterSheet(Types::WeakPtr<CharacterSheet> weakPtr)
 {
+    Types::SharedPtr<CharacterSheet> sheet = weakPtr.lock();
+    if (sheet.isNull()) {
+        return;
+    }
+
+    sheet->clear();
+
     LOG_INFO << "__________Begin rolling for character__________";
-    CharacterSheet sheet = CharacterSheet();
 
     const RaceRollList &raceRollList = getRaceRollList();
     const Race &race = raceRollList.rollForItem();
 
-    sheet.insertAttribute(createAttribute(race));
+    sheet->insertAttribute(createAttribute(race));
 
     const BirthSignsRollList &birthSignRollList = getBirthSignsRollList();
     const BirthSign &birthSign = birthSignRollList.rollForItem();
 
-    sheet.insertAttribute(createAttribute(birthSign));
+    sheet->insertAttribute(createAttribute(birthSign));
 
     const Sex sex = rollForSex();
 
-    sheet.insertAttribute(createAttribute(sex));
+    sheet->insertAttribute(createAttribute(sex));
 
     const SexualitiesRollList sexualitiesRollList = createSexualitiesRollList(sex.getId());
     const Sexuality &sexuality = sexualitiesRollList.rollForItem();
 
-    sheet.insertAttribute(createAttribute(sexuality));
+    sheet->insertAttribute(createAttribute(sexuality));
 
     const bool isArchetypeBasedOnBirthSign = birthSign.rollIfArchetypeBasedOnBirthSign();
     const Archetype archetype = isArchetypeBasedOnBirthSign
                                     ? createArchetype(birthSign.getArchetypeId())
                                     : race.rollArchetype();
-    sheet.insertAttribute(createAttribute(archetype));
+    sheet->insertAttribute(createAttribute(archetype));
 
     const RpgClassRollList rpgClassRollList = createRpgClassRollList(archetype.getId());
     const RpgClass rpgClass = rpgClassRollList.rollForItem();
 
-    sheet.insertAttribute(createAttribute(rpgClass));
+    sheet->insertAttribute(createAttribute(rpgClass));
 
     const SkinColor skinColor = race.rollSkinColor();
     if (skinColor.getId() != sc_nil) {
-        sheet.insertAttribute(createAttribute(skinColor));
+        sheet->insertAttribute(createAttribute(skinColor));
     }
 
     const HairColor hairColor = race.rollHairColor();
     if (hairColor.getId() != hc_nil) {
-        sheet.insertAttribute(createAttribute(hairColor));
+        sheet->insertAttribute(createAttribute(hairColor));
     }
 
     const FurPattern furPattern = race.rollFurPattern();
     if (furPattern.getId() != fp_nil) {
-        sheet.insertAttribute(createAttribute(furPattern));
+        sheet->insertAttribute(createAttribute(furPattern));
     }
 
     const ScaleColor scaleColor = race.rollScaleColor();
     if (scaleColor.getId() != scl_null) {
-        sheet.insertAttribute(createAttribute(scaleColor));
+        sheet->insertAttribute(createAttribute(scaleColor));
     }
 
     const HornType hornType = race.rollHornType();
     if (hornType.getId() != ht_null) {
-        sheet.insertAttribute(createAttribute(hornType));
+        sheet->insertAttribute(createAttribute(hornType));
     }
 
     const EyeColor eyeColor = race.rollEyeColor();
-    sheet.insertAttribute(createAttribute(eyeColor));
+    sheet->insertAttribute(createAttribute(eyeColor));
 
     LOG_INFO << "__________Finished rolling character__________";
 
     LOG_INFO << "New Character Sheet";
-    LOG_INFO << sheet.toString();
-    return sheet;
-}
+    LOG_INFO << sheet->toLoggableString();
+} // namespace CharGen
 
 } // namespace CharGen

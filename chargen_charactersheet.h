@@ -1,7 +1,7 @@
-#ifndef CHARACTERSHEET_H
-#define CHARACTERSHEET_H
+#ifndef CHARGEN_CHARACTERSHEET_H
+#define CHARGEN_CHARACTERSHEET_H
 
-#include "attribute.h"
+#include "chargen_attribute.h"
 
 namespace CharGen {
 
@@ -16,6 +16,8 @@ public:
 
     CharacterSheet();
 
+    void clear();
+
     Iterator begin();
 
     Iterator end();
@@ -24,8 +26,10 @@ public:
 
     Types::Size attributeCount() const;
 
-    Types::String toString();
+    Types::String toLoggableString();
+
+    Types::String toClipboardString();
 };
 } // namespace CharGen
 
-#endif // CHARACTERSHEET_H
+#endif // CHARGEN_CHARACTERSHEET_H

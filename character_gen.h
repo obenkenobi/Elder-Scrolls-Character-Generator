@@ -2,16 +2,24 @@
 #define CHARACTER_GEN_H
 
 #include "aliases.h"
-#include "enum.h"
 #include "roll.h"
 
-namespace CharGen
-{
+namespace CharGen {
 // Archetype
 // -----------------------------------------------------------------------------
-ENUM(ArchetypeId, a_mage, a_thief, a_warrior, a_any);
 
-using Archetype = Roll::RollItem<ArchetypeId>;
+enum ArchetypeId { a_mage, a_thief, a_warrior, a_any };
+
+class Archetype : public Roll::RollItem<ArchetypeId>
+{
+private:
+    static inline const Aliases::String LABEL_ = "Archetype";
+
+public:
+    using Roll::RollItem<ArchetypeId>::RollItem;
+
+    Aliases::String getLabel() const;
+};
 
 Archetype createArchetype(const ArchetypeId id);
 
@@ -28,30 +36,40 @@ ArchetypeRollList createArchetypeRollList(const MageRange mageRange,
 //  RPG Class
 //  ------------------------------------------------------------------------------
 
-ENUM(RpgClassId,
-     c_archer,
-     c_barbarian,
-     c_crusader,
-     c_knight,
-     c_rogue,
-     c_scout,
-     c_warrior,
-     c_acrobat,
-     c_agent,
-     c_assassin,
-     c_bard,
-     c_monk,
-     c_pilgrim,
-     c_thief,
-     c_battle_mage,
-     c_healer,
-     c_mage,
-     c_night_blade,
-     c_sorcerer,
-     c_spell_sword,
-     c_witch_hunter);
+enum RpgClassId {
+    c_archer,
+    c_barbarian,
+    c_crusader,
+    c_knight,
+    c_rogue,
+    c_scout,
+    c_warrior,
+    c_acrobat,
+    c_agent,
+    c_assassin,
+    c_bard,
+    c_monk,
+    c_pilgrim,
+    c_thief,
+    c_battle_mage,
+    c_healer,
+    c_mage,
+    c_night_blade,
+    c_sorcerer,
+    c_spell_sword,
+    c_witch_hunter
+};
 
-using RpgClass = Roll::RollItem<RpgClassId>;
+class RpgClass : public Roll::RollItem<RpgClassId>
+{
+private:
+    static inline const Aliases::String LABEL_ = "Class";
+
+public:
+    using Roll::RollItem<RpgClassId>::RollItem;
+
+    Aliases::String getLabel() const;
+};
 
 using RpgClassRollList = Roll::RollList<RpgClass>;
 using RpgClassRollMatcher = Roll::RollMatcher<RpgClass>;
@@ -66,20 +84,22 @@ const RpgClassRollList &createRpgClassRollList(const ArchetypeId archetypeId);
 
 // Birth Signs
 // ------------------------------------------------------------------------------------------------------------
-ENUM(BirthSignId,
-     b_ritual,
-     b_lover,
-     b_lord,
-     b_mage,
-     b_shadow,
-     b_steed,
-     b_apprentice,
-     b_warrior,
-     b_lady,
-     b_tower,
-     b_atronach,
-     b_thief,
-     b_serpent);
+
+enum BirthSignId {
+    b_ritual,
+    b_lover,
+    b_lord,
+    b_mage,
+    b_shadow,
+    b_steed,
+    b_apprentice,
+    b_warrior,
+    b_lady,
+    b_tower,
+    b_atronach,
+    b_thief,
+    b_serpent
+};
 
 class BirthSign : public Roll::RollItem<BirthSignId>
 {
@@ -90,9 +110,12 @@ public:
 
     bool rollIfArchetypeBasedOnBirthSign() const;
 
-    ArchetypeId getArchetypeId() const { return archetypeId_; }
+    Aliases::String getLabel() const;
+
+    ArchetypeId getArchetypeId() const;
 
 private:
+    static inline const Aliases::String LABEL_ = "Birthsign";
     ArchetypeId archetypeId_;
 };
 
@@ -105,17 +128,41 @@ const BirthSignsRollList &getBirthSignsRollList();
 // Sex
 // ------------------------------------------------------------------------------------------------------------
 
-ENUM(SexId, male, female);
+// Unfortunately Elder Scrolls games do not have an
+// intersex option nor a nonbinary option if you prefer
+// to use gender.
 
-using Sex = Roll::RollItem<SexId>;
+enum SexId { male, female };
+
+class Sex : public Roll::RollItem<SexId>
+{
+private:
+    static inline const Aliases::String LABEL_ = "Sex";
+    bool isTranssexual_;
+
+public:
+    Sex(SexId id, Aliases::String displayName, bool isTranssexual);
+
+    Aliases::String getLabel() const;
+    bool isTranssexual() const;
+};
 
 Sex rollForSex();
 
 // Sexuality
 // ------------------------------------------------------------------------------------------------------------
+
 enum SexualityId { heterosexual, bisexual, homosexual };
 
-using Sexuality = Roll::RollItem<SexualityId>;
+class Sexuality : public Roll::RollItem<SexualityId>
+{
+private:
+    static inline const Aliases::String LABEL_ = "Sexuality";
+
+public:
+    using Roll::RollItem<SexualityId>::RollItem;
+    Aliases::String getLabel() const;
+};
 
 using SexualitiesRollList = Roll::RollList<Sexuality>;
 using SexualitiesRollMatcher = Roll::RollMatcher<Sexuality>;
@@ -124,21 +171,32 @@ const SexualitiesRollList &createSexualitiesRollList(const SexId sexId);
 
 // Skin Color
 // ------------------------------------------------------------------------------------------------------------------
-ENUM(SkinColorId,
-     sc_nil,
-     sc_pale,
-     sc_fair,
-     sc_tan,
-     sc_dark,
-     sc_golden,
-     sc_ashen_grey,
-     sc_dark_grey,
-     sc_near_black,
-     sc_brown,
-     sc_olive,
-     sc_dark_green);
 
-using SkinColor = Roll::RollItem<SkinColorId>;
+enum SkinColorId {
+    sc_nil,
+    sc_pale,
+    sc_fair,
+    sc_tan,
+    sc_dark,
+    sc_golden,
+    sc_ashen_grey,
+    sc_dark_grey,
+    sc_near_black,
+    sc_brown,
+    sc_olive,
+    sc_dark_green
+};
+
+class SkinColor : public Roll::RollItem<SkinColorId>
+{
+private:
+    static inline const Aliases::String LABEL_ = "Skin Color";
+
+public:
+    using Roll::RollItem<SkinColorId>::RollItem;
+
+    Aliases::String getLabel() const;
+};
 
 using SkinColorRollList = Roll::RollList<SkinColor>;
 using SkinColorMatcher = Roll::RollMatcher<SkinColor>;
@@ -147,23 +205,33 @@ SkinColorMatcher createSkinColorMatcher(const Roll::Range range, const SkinColor
 
 // Hair Color
 // ------------------------------------------------------------------------------------------------------------------
-ENUM(HairColorId,
-     hc_nil,
-     hc_blonde,
-     hc_brown,
-     hc_red,
-     hc_black,
-     hc_dark_red,
-     hc_grey,
-     hc_golden_blonde,
-     hc_silver_white,
-     hc_light_brown,
-     hc_green,
-     hc_dark_brown,
-     hc_white,
-     hc_orange);
 
-using HairColor = Roll::RollItem<HairColorId>;
+enum HairColorId {
+    hc_nil,
+    hc_blonde,
+    hc_brown,
+    hc_red,
+    hc_black,
+    hc_dark_red,
+    hc_grey,
+    hc_golden_blonde,
+    hc_silver_white,
+    hc_light_brown,
+    hc_green,
+    hc_dark_brown,
+    hc_white,
+    hc_orange
+};
+
+class HairColor : public Roll::RollItem<HairColorId>
+{
+private:
+    static inline const Aliases::String LABEL_ = "Hair Color";
+
+public:
+    using Roll::RollItem<HairColorId>::RollItem;
+    Aliases::String getLabel() const;
+};
 
 using HairColorRollList = Roll::RollList<HairColor>;
 using HairColorMatcher = Roll::RollMatcher<HairColor>;
@@ -171,21 +239,31 @@ using HairColorMatcher = Roll::RollMatcher<HairColor>;
 HairColorMatcher createHairColorMatcher(const Roll::Range range, const HairColorId id);
 
 // Eye Color --------------------------------------------------------
-ENUM(EyeColorId,
-     ec_nil,
-     ec_blue,
-     ec_green,
-     ec_grey,
-     ec_brown,
-     ec_hazel,
-     ec_black,
-     ec_amber,
-     ec_red,
-     ec_orange,
-     ec_gold,
-     ec_yellow);
 
-using EyeColor = Roll::RollItem<EyeColorId>;
+enum EyeColorId {
+    ec_nil,
+    ec_blue,
+    ec_green,
+    ec_grey,
+    ec_brown,
+    ec_hazel,
+    ec_black,
+    ec_amber,
+    ec_red,
+    ec_orange,
+    ec_gold,
+    ec_yellow
+};
+
+class EyeColor : public Roll::RollItem<EyeColorId>
+{
+private:
+    static inline const Aliases::String LABEL_ = "Eye Color";
+
+public:
+    using Roll::RollItem<EyeColorId>::RollItem;
+    Aliases::String getLabel() const;
+};
 
 using EyeColorRollList = Roll::RollList<EyeColor>;
 using EyeColorMatcher = Roll::RollMatcher<EyeColor>;
@@ -193,9 +271,18 @@ using EyeColorMatcher = Roll::RollMatcher<EyeColor>;
 EyeColorMatcher createEyeColorMatcher(const Roll::Range range, const EyeColorId id);
 
 // Fur Pattern --------------------------------------------------------
-ENUM(FurPatternId, fp_nil, fp_striped, fp_spotted, fp_solid, fp_tabby);
 
-using FurPattern = Roll::RollItem<FurPatternId>;
+enum FurPatternId { fp_nil, fp_striped, fp_spotted, fp_solid, fp_tabby };
+
+class FurPattern : public Roll::RollItem<FurPatternId>
+{
+private:
+    static inline const Aliases::String LABEL_ = "Fur Pattern";
+
+public:
+    using Roll::RollItem<FurPatternId>::RollItem;
+    Aliases::String getLabel() const;
+};
 
 using FurPatternRollList = Roll::RollList<FurPattern>;
 using FurPatternMatcher = Roll::RollMatcher<FurPattern>;
@@ -203,9 +290,18 @@ using FurPatternMatcher = Roll::RollMatcher<FurPattern>;
 FurPatternMatcher createFurPatternMatcher(const Roll::Range range, const FurPatternId id);
 
 // Scale Color --------------------------------------------------------
-ENUM(ScaleColorId, scl_null, scl_dark_green, scl_olive, scl_brown, scl_grey);
 
-using ScaleColor = Roll::RollItem<ScaleColorId>;
+enum ScaleColorId { scl_null, scl_dark_green, scl_olive, scl_brown, scl_grey };
+
+class ScaleColor : public Roll::RollItem<ScaleColorId>
+{
+private:
+    static inline const Aliases::String LABEL_ = "Scale Color";
+
+public:
+    using Roll::RollItem<ScaleColorId>::RollItem;
+    Aliases::String getLabel() const;
+};
 
 using ScaleColorRollList = Roll::RollList<ScaleColor>;
 using ScaleColorMatcher = Roll::RollMatcher<ScaleColor>;
@@ -213,9 +309,17 @@ using ScaleColorMatcher = Roll::RollMatcher<ScaleColor>;
 ScaleColorMatcher createScaleColorMatcher(const Roll::Range range, const ScaleColorId id);
 
 // Horn Type --------------------------------------------------------
-ENUM(HornTypeId, ht_null, ht_none, ht_spiked, ht_curved, ht_both);
+enum HornTypeId { ht_null, ht_none, ht_spiked, ht_curved, ht_both };
 
-using HornType = Roll::RollItem<HornTypeId>;
+class HornType : public Roll::RollItem<HornTypeId>
+{
+private:
+    static inline const Aliases::String LABEL_ = "Horn Type";
+
+public:
+    using Roll::RollItem<HornTypeId>::RollItem;
+    Aliases::String getLabel() const;
+};
 
 using HornTypeRollList = Roll::RollList<HornType>;
 using HornTypeMatcher = Roll::RollMatcher<HornType>;
@@ -224,17 +328,19 @@ HornTypeMatcher createHornTypeMatcher(const Roll::Range range, const HornTypeId 
 
 // Race
 // ------------------------------------------------------------------------------------------------------------------
-ENUM(RaceId,
-     r_nord,
-     r_imperial,
-     r_breton,
-     r_dunmer,
-     r_altmer,
-     r_orsimer,
-     r_redguard,
-     r_bosmer,
-     r_khajiit,
-     r_argonian);
+
+enum RaceId {
+    r_nord,
+    r_imperial,
+    r_breton,
+    r_dunmer,
+    r_altmer,
+    r_orsimer,
+    r_redguard,
+    r_bosmer,
+    r_khajiit,
+    r_argonian
+};
 
 class Race : public Roll::RollItem<RaceId>
 {
@@ -248,6 +354,8 @@ public:
          FurPatternRollList furPatternRollList,
          ScaleColorRollList scaleColorRollList,
          HornTypeRollList hornTypeRollList);
+
+    Aliases::String getLabel() const;
 
     Archetype rollArchetype() const;
 
@@ -271,6 +379,7 @@ private:
     FurPatternRollList furPatternRollList_;
     ScaleColorRollList scaleColorRollList_;
     HornTypeRollList hornTypeRollList_;
+    static inline const Aliases::String LABEL_ = "Race";
 };
 
 using RaceRollList = Roll::RollList<Race>;
@@ -278,8 +387,59 @@ using RaceRollMatcher = Roll::RollMatcher<Race>;
 
 const RaceRollList &getRaceRollList();
 
-Aliases::String generateCharacterText();
+class Attribute
+{
+public:
+    Attribute(const Aliases::String &label,
+              const Aliases::Uint8 &id,
+              const Aliases::String &displayName);
+
+    Attribute(const Attribute &attr);
+
+    Attribute();
+
+    Aliases::String getDisplayName() const;
+    Aliases::Uint8 getId() const;
+    Aliases::String getLabel() const;
+
+protected:
+private:
+    Aliases::String displayName_;
+    Aliases::Uint8 id_;
+    Aliases::String label_;
+};
+
+template<class Tid>
+Attribute createAttribute(const Roll::RollItem<Tid> &item)
+{
+    return Attribute(item.getLabel(),
+                     static_cast<Aliases::Uint8>(item.getId()),
+                     item.getDisplayName());
 }
 
+class CharacterSheet
+{
+private:
+    using AttrVector = Aliases::Vector<Attribute>;
+    AttrVector attrVector_;
+
+public:
+    using Iterator = AttrVector::Iterator;
+
+    CharacterSheet();
+
+    Iterator begin();
+
+    Iterator end();
+
+    void insertAttribute(const Attribute attr);
+
+    Aliases::String toText();
+
+};
+
+CharacterSheet generateCharacterSheet();
+
+} // namespace CharGen
 
 #endif // CHARACTER_GEN_H

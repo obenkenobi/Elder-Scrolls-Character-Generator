@@ -1,8 +1,14 @@
 #include "character_gen.h"
+#include "logging.h"
 #include <stdexcept>
 #include <utility>
 
 namespace CharGen {
+
+Aliases::String Archetype::getLabel() const
+{
+    return LABEL_;
+}
 
 Archetype createArchetype(const ArchetypeId id)
 {
@@ -32,6 +38,11 @@ ArchetypeRollList createArchetypeRollList(const MageRange mageRange,
         ArchetypeRollMatcher(warriorRange, warrior),
         ArchetypeRollMatcher(thiefRange, thief),
     };
+}
+
+Aliases::String RpgClass::getLabel() const
+{
+    return LABEL_;
 }
 
 const RpgClassRollList &getWarriorClassRollList()
@@ -128,6 +139,16 @@ bool BirthSign::rollIfArchetypeBasedOnBirthSign() const
     return false;
 }
 
+Aliases::String BirthSign::getLabel() const
+{
+    return LABEL_;
+}
+
+ArchetypeId BirthSign::getArchetypeId() const
+{
+    return archetypeId_;
+}
+
 const BirthSignsRollList &getBirthSignsRollList()
 {
     static const auto ritual = BirthSign(b_ritual, a_mage, "The Ritual");
@@ -161,14 +182,49 @@ const BirthSignsRollList &getBirthSignsRollList()
     return list;
 }
 
-Sex rollForSex()
+bool Sex::isTranssexual() const
 {
-    const Roll::RollUint rollNum = Roll::rollRandNumber();
-    return Roll::Range(1, 50).inRollRangeInclusive(rollNum) ? Sex(male, "Male")
-                                                            : Sex(female, "Female");
+    return isTranssexual_;
 }
 
-const SexualitiesRollList &createSexualitiesRollList(const SexId sex_id)
+Sex::Sex(SexId id, Aliases::String displayName, bool isTranssexual)
+    : RollItem(id, displayName)
+    , isTranssexual_(isTranssexual)
+{}
+
+Aliases::String Sex::getLabel() const
+{
+    return LABEL_;
+}
+
+Sex rollForSex()
+{
+    static const auto sexRange = Roll::Range(1, 50);
+    const Roll::RollUint sexIdRollNum = Roll::rollRandNumber();
+    const SexId sexId = sexRange.inRollRangeInclusive(sexIdRollNum) ? male : female;
+    const Aliases::String sexString = sexId == male ? "Man" : "Woman";
+
+    static const auto transRange = Roll::Range(100, 100);
+    const Roll::RollUint transRollNum = Roll::rollRandNumber();
+    static bool isTrans = transRange.inRollRangeInclusive(transRollNum);
+    const Aliases::String transStatusString = !isTrans ? "" : "Transsexual ";
+
+    const Aliases::String displayName = transStatusString + sexString;
+
+    LOG_DEBUG << Aliases::String("Rolled for sex [%1] with sex roll %2 and trans roll %3")
+                     .arg(displayName)
+                     .arg(sexIdRollNum)
+                     .arg(transRollNum);
+
+    return Sex(sexId, displayName, isTrans);
+}
+
+Aliases::String Sexuality::getLabel() const
+{
+    return LABEL_;
+}
+
+const SexualitiesRollList &createSexualitiesRollList(const SexId sexId)
 {
     static const auto hetero = Sexuality(heterosexual, "Heterosexual");
     static const auto bi = Sexuality(bisexual, "Bisexual");
@@ -183,10 +239,15 @@ const SexualitiesRollList &createSexualitiesRollList(const SexId sex_id)
         SexualitiesRollMatcher(Roll::Range(73, 92), bi),
         SexualitiesRollMatcher(Roll::Range(93, 100), homo),
     };
-    if (sex_id == female) {
+    if (sexId == female) {
         return femaleList;
     }
     return maleList;
+}
+
+Aliases::String SkinColor::getLabel() const
+{
+    return LABEL_;
 }
 
 SkinColorMatcher createSkinColorMatcher(const Roll::Range range, const SkinColorId &skinColorId)
@@ -230,6 +291,11 @@ SkinColorMatcher createSkinColorMatcher(const Roll::Range range, const SkinColor
         return SkinColorMatcher{range, nil};
     }
     return SkinColorMatcher{range, nil};
+}
+
+Aliases::String HairColor::getLabel() const
+{
+    return LABEL_;
 }
 
 HairColorMatcher createHairColorMatcher(const Roll::Range range, const HairColorId id)
@@ -282,6 +348,11 @@ HairColorMatcher createHairColorMatcher(const Roll::Range range, const HairColor
     return HairColorMatcher{range, nil};
 }
 
+Aliases::String EyeColor::getLabel() const
+{
+    return LABEL_;
+}
+
 EyeColorMatcher createEyeColorMatcher(const Roll::Range range, const EyeColorId id)
 {
     static const auto blue = EyeColor(ec_blue, "Blue");
@@ -326,6 +397,11 @@ EyeColorMatcher createEyeColorMatcher(const Roll::Range range, const EyeColorId 
     return EyeColorMatcher{range, nil};
 }
 
+Aliases::String FurPattern::getLabel() const
+{
+    return LABEL_;
+}
+
 FurPatternMatcher createFurPatternMatcher(const Roll::Range range, const FurPatternId id)
 {
     static const auto striped = FurPattern(fp_striped, "Striped");
@@ -349,6 +425,11 @@ FurPatternMatcher createFurPatternMatcher(const Roll::Range range, const FurPatt
     return FurPatternMatcher{range, nil};
 }
 
+Aliases::String ScaleColor::getLabel() const
+{
+    return LABEL_;
+}
+
 ScaleColorMatcher createScaleColorMatcher(const Roll::Range range, const ScaleColorId id)
 {
     static const auto darkGreen = ScaleColor(scl_dark_green, "Dark Green");
@@ -370,6 +451,11 @@ ScaleColorMatcher createScaleColorMatcher(const Roll::Range range, const ScaleCo
         return ScaleColorMatcher{range, null};
     }
     return ScaleColorMatcher{range, null};
+}
+
+Aliases::String HornType::getLabel() const
+{
+    return LABEL_;
 }
 
 HornTypeMatcher createHornTypeMatcher(const Roll::Range range, const HornTypeId id)
@@ -414,37 +500,42 @@ Race::Race(const RaceId &id,
     , hornTypeRollList_(std::move(hornTypeRollList))
 {}
 
-Archetype CharGen::Race::rollArchetype() const
+Aliases::String Race::getLabel() const
+{
+    return LABEL_;
+}
+
+Archetype Race::rollArchetype() const
 {
     return archetypeRollList_.rollForItem();
 }
 
-SkinColor CharGen::Race::rollSkinColor() const
+SkinColor Race::rollSkinColor() const
 {
     return skinColorRollList_.rollForItem();
 }
 
-HairColor CharGen::Race::rollHairColor() const
+HairColor Race::rollHairColor() const
 {
     return hairColorRollList_.rollForItem();
 }
 
-EyeColor CharGen::Race::rollEyeColor() const
+EyeColor Race::rollEyeColor() const
 {
     return eyeColorRollList_.rollForItem();
 }
 
-FurPattern CharGen::Race::rollFurPattern() const
+FurPattern Race::rollFurPattern() const
 {
     return furPatternRollList_.rollForItem();
 }
 
-ScaleColor CharGen::Race::rollScaleColor() const
+ScaleColor Race::rollScaleColor() const
 {
     return scaleColorRollList_.rollForItem();
 }
 
-HornType CharGen::Race::rollHornType() const
+HornType Race::rollHornType() const
 {
     return hornTypeRollList_.rollForItem();
 }
@@ -665,71 +756,152 @@ const RaceRollList &getRaceRollList()
     return list;
 }
 
-Aliases::String generateCharacterText()
+Attribute::Attribute(const Aliases::String &label,
+                     const Aliases::Uint8 &id,
+                     const Aliases::String &displayName)
+    : label_(label)
+    , id_(id)
+    , displayName_(displayName)
+{}
+
+Attribute::Attribute(const Attribute &attr)
+    : label_(attr.label_)
+    , id_(attr.id_)
+    , displayName_(attr.displayName_)
+{}
+
+Attribute::Attribute()
+    : label_("NULL")
+    , id_(0)
+    , displayName_("NULL")
+{}
+
+Aliases::String Attribute::getDisplayName() const
 {
-    Aliases::String characterText = "";
+    return displayName_;
+}
+
+Aliases::Uint8 Attribute::getId() const
+{
+    return id_;
+}
+
+Aliases::String Attribute::getLabel() const
+{
+    return label_;
+}
+
+CharacterSheet::CharacterSheet()
+    : attrVector_(AttrVector())
+{}
+
+inline CharacterSheet::Iterator CharacterSheet::begin()
+{
+    return attrVector_.begin();
+}
+
+inline CharacterSheet::Iterator CharacterSheet::end()
+{
+    return attrVector_.end();
+}
+
+void CharacterSheet::insertAttribute(const Attribute attr)
+{
+    this->attrVector_.push_back(attr);
+}
+
+Aliases::String CharacterSheet::toText()
+{
+    Aliases::String character_text = "<table>";
+
+    for (auto i = this->attrVector_.begin(); i != this->attrVector_.end(); i++) {
+        Attribute attr = *i;
+        character_text += "<tr><td><b>" + attr.getLabel() + "</b></td><td>" + attr.getDisplayName()
+                          + "</td></tr>";
+    }
+    character_text += "<table>";
+    return character_text;
+}
+
+Archetype _rollArchetype(const BirthSign &birthSign, const Race &race)
+{
+    static const Aliases::String logFormat
+        = "Archetype based on [%1] [%2] so the archetype is [%3]";
+    const bool isArchetypeBasedOnBirthSign = birthSign.rollIfArchetypeBasedOnBirthSign();
+    if (isArchetypeBasedOnBirthSign) {
+        Archetype archetypeBsign = createArchetype(birthSign.getArchetypeId());
+        LOG_INFO << logFormat.arg("birthsign",
+                                  birthSign.getDisplayName(),
+                                  archetypeBsign.getDisplayName());
+    }
+    Archetype rolledArchetype = race.rollArchetype();
+    LOG_INFO << logFormat.arg("race", race.getDisplayName(), rolledArchetype.getDisplayName());
+    return rolledArchetype;
+}
+
+CharacterSheet generateCharacterSheet()
+{
+    CharacterSheet sheet = CharacterSheet();
 
     const RaceRollList &raceRollList = getRaceRollList();
     const Race &race = raceRollList.rollForItem();
 
-    characterText += race.createLabeledName("Race") + '\n';
+    sheet.insertAttribute(createAttribute(race));
 
     const BirthSignsRollList &birthSignRollList = getBirthSignsRollList();
     const BirthSign &birthSign = birthSignRollList.rollForItem();
 
-    characterText += birthSign.createLabeledName("Birthsign") + '\n';
+    sheet.insertAttribute(createAttribute(birthSign));
 
     const Sex sex = rollForSex();
 
-    characterText += sex.createLabeledName("Sex") + '\n';
+    sheet.insertAttribute(createAttribute(sex));
 
     const SexualitiesRollList sexualitiesRollList = createSexualitiesRollList(sex.getId());
     const Sexuality &sexuality = sexualitiesRollList.rollForItem();
 
-    characterText += sexuality.createLabeledName("Sexuality") + '\n';
+    sheet.insertAttribute(createAttribute(sexuality));
 
     const bool isArchetypeBasedOnBirthSign = birthSign.rollIfArchetypeBasedOnBirthSign();
     const Archetype archetype = isArchetypeBasedOnBirthSign
                                     ? createArchetype(birthSign.getArchetypeId())
                                     : race.rollArchetype();
-
-    characterText += archetype.createLabeledName("Archetype") + '\n';
+    sheet.insertAttribute(createAttribute(archetype));
 
     const RpgClassRollList rpgClassRollList = createRpgClassRollList(archetype.getId());
     const RpgClass rpgClass = rpgClassRollList.rollForItem();
 
-    characterText += rpgClass.createLabeledName("RPG Class") + '\n';
+    sheet.insertAttribute(createAttribute(rpgClass));
 
     const SkinColor skinColor = race.rollSkinColor();
     if (skinColor.getId() != sc_nil) {
-        characterText += skinColor.createLabeledName("Skin Color") + '\n';
+        sheet.insertAttribute(createAttribute(skinColor));
     }
 
     const HairColor hairColor = race.rollHairColor();
     if (hairColor.getId() != hc_nil) {
-        characterText += hairColor.createLabeledName("Hair Color") + '\n';
+        sheet.insertAttribute(createAttribute(hairColor));
     }
 
     const FurPattern furPattern = race.rollFurPattern();
     if (furPattern.getId() != fp_nil) {
-        characterText += furPattern.createLabeledName("Fur Pattern") + '\n';
+        sheet.insertAttribute(createAttribute(furPattern));
     }
 
     const ScaleColor scaleColor = race.rollScaleColor();
     if (scaleColor.getId() != scl_null) {
-        characterText += scaleColor.createLabeledName("Scale Color") + '\n';
+        sheet.insertAttribute(createAttribute(scaleColor));
     }
 
     const HornType hornType = race.rollHornType();
     if (hornType.getId() != ht_null) {
-        characterText += hornType.createLabeledName("Horn Type") + '\n';
+        sheet.insertAttribute(createAttribute(hornType));
     }
 
     const EyeColor eyeColor = race.rollEyeColor();
+    sheet.insertAttribute(createAttribute(eyeColor));
 
-    characterText += eyeColor.createLabeledName("Eye Color") + '\n';
-
-    return characterText;
+    return sheet;
 }
 
 } // namespace CharGen

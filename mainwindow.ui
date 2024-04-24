@@ -37,22 +37,6 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuElder_Scrolls_Character_Generator">
-    <property name="title">
-     <string>Elder Scrolls Character Generator</string>
-    </property>
-   </widget>
-   <addaction name="menuElder_Scrolls_Character_Generator"/>
-  </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>

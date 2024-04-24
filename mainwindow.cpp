@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Elder Scrolls Character Generator");
 }
 
 MainWindow::~MainWindow()
@@ -16,7 +17,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_generateCharacterButton_clicked()
 {
-    const Aliases::String text = CharGen::generateCharacterText();
+    const Aliases::String text = CharGen::generateCharacterSheet().toText();
     ui->characterSheetTextBrowser->setText(text);
 }
 

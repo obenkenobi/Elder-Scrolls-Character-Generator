@@ -1,6 +1,7 @@
 #ifndef ALIASES_H
 #define ALIASES_H
 
+#include <QMap>
 #include <QString>
 #include <QVector>
 #include <QtTypes>
@@ -12,6 +13,9 @@ using String = QString;
 using Uint8 = quint8;
 
 template <class T> using Vector = QVector<T>;
+
+template<class K, class V>
+using Map = QMap<K, V>;
 
 template <class T> using InitializerList = std::initializer_list<T>;
 

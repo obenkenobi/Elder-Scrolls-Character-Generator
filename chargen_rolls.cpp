@@ -14,29 +14,29 @@ Archetype createArchetype(const ArchetypeId id)
 {
     switch (id) {
     case a_mage:
-        return Archetype(a_mage, "Mage");
+        return Archetype(id, "Mage");
     case a_warrior:
-        return Archetype(a_mage, "Warrior");
+        return Archetype(id, "Warrior");
     case a_thief:
-        return Archetype(a_thief, "Thief");
+        return Archetype(id, "Thief");
     case a_any:
-        break;
+        return Archetype(id, "Any");
     }
-    return Archetype(a_any, "Any");
+    std::invalid_argument("Invalid archetype id when creating archetype");
 }
 
-ArchetypeRollList createArchetypeRollList(const MageRange mageRange,
-                                          const WarriorRange warriorRange,
-                                          const ThiefRange thiefRange)
+ArchetypeRollList createArchetypeRollList(const WarriorRange warriorRange,
+                                          const ThiefRange thiefRange,
+                                          const MageRange mageRange)
 {
-    static auto mage = createArchetype(a_mage);
     static auto warrior = createArchetype(a_warrior);
     static auto thief = createArchetype(a_thief);
+    static auto mage = createArchetype(a_mage);
 
     return ArchetypeRollList{
-        ArchetypeRollMatcher(mageRange, mage),
         ArchetypeRollMatcher(warriorRange, warrior),
         ArchetypeRollMatcher(thiefRange, thief),
+        ArchetypeRollMatcher(mageRange, mage),
     };
 }
 
@@ -545,7 +545,7 @@ const RaceRollList &getRaceRollList()
     static const auto nord
         = Race{r_nord,
                "Nord",
-               createArchetypeRollList(MageRange(1, 60), WarriorRange(61, 80), ThiefRange(81, 100)),
+               createArchetypeRollList(WarriorRange(1, 60), ThiefRange(61, 80), MageRange(81, 100)),
                SkinColorRollList{createSkinColorMatcher(Roll::Range(1, 70), sc_pale),
                                  createSkinColorMatcher(Roll::Range(71, 95), sc_fair),
                                  createSkinColorMatcher(Roll::Range(96, 100), sc_tan)},
@@ -564,7 +564,7 @@ const RaceRollList &getRaceRollList()
     static const auto imperial
         = Race{r_imperial,
                "Imperial",
-               createArchetypeRollList(MageRange(1, 40), WarriorRange(41, 60), ThiefRange(61, 100)),
+               createArchetypeRollList(WarriorRange(1, 40), ThiefRange(41, 60), MageRange(61, 100)),
                SkinColorRollList{createSkinColorMatcher(Roll::Range(1, 50), sc_tan),
                                  createSkinColorMatcher(Roll::Range(51, 80), sc_fair),
                                  createSkinColorMatcher(Roll::Range(81, 95), sc_pale),
@@ -583,7 +583,7 @@ const RaceRollList &getRaceRollList()
     static const auto breton
         = Race{r_breton,
                "Breton",
-               createArchetypeRollList(MageRange(1, 25), WarriorRange(26, 50), ThiefRange(51, 100)),
+               createArchetypeRollList(WarriorRange(1, 25), ThiefRange(26, 50), MageRange(51, 100)),
                SkinColorRollList{
                    createSkinColorMatcher(Roll::Range(1, 40), sc_pale),
                    createSkinColorMatcher(Roll::Range(41, 90), sc_fair),
@@ -604,7 +604,7 @@ const RaceRollList &getRaceRollList()
     static const auto redguard
         = Race{r_redguard,
                "Redguard",
-               createArchetypeRollList(MageRange(1, 60), WarriorRange(61, 80), ThiefRange(81, 100)),
+               createArchetypeRollList(WarriorRange(1, 60), ThiefRange(61, 80), MageRange(81, 100)),
                SkinColorRollList{
                    createSkinColorMatcher(Roll::Range(1, 60), sc_dark),
                    createSkinColorMatcher(Roll::Range(61, 90), sc_tan),
@@ -623,7 +623,7 @@ const RaceRollList &getRaceRollList()
     static const auto dunmer
         = Race(r_dunmer,
                "Dunmer (Dark Elf)",
-               createArchetypeRollList(MageRange(1, 35), WarriorRange(36, 65), ThiefRange(66, 100)),
+               createArchetypeRollList(WarriorRange(1, 35), ThiefRange(36, 65), MageRange(66, 100)),
                SkinColorRollList{createSkinColorMatcher(Roll::Range(1, 70), sc_ashen_grey),
                                  createSkinColorMatcher(Roll::Range(71, 95), sc_dark_grey),
                                  createSkinColorMatcher(Roll::Range(96, 100), sc_near_black)},
@@ -640,7 +640,7 @@ const RaceRollList &getRaceRollList()
     static const auto altmer
         = Race{r_altmer,
                "Altmer (High Elf)",
-               createArchetypeRollList(MageRange(1, 15), WarriorRange(16, 30), ThiefRange(31, 100)),
+               createArchetypeRollList(WarriorRange(1, 15), ThiefRange(16, 30), MageRange(31, 100)),
                SkinColorRollList{
                    createSkinColorMatcher(Roll::Range(1, 70), sc_fair),
                    createSkinColorMatcher(Roll::Range(71, 90), sc_pale),
@@ -659,7 +659,7 @@ const RaceRollList &getRaceRollList()
     static const auto bosmer
         = Race{r_bosmer,
                "Bosmer (Wood Elf)",
-               createArchetypeRollList(MageRange(1, 35), WarriorRange(36, 85), ThiefRange(86, 100)),
+               createArchetypeRollList(WarriorRange(1, 35), ThiefRange(36, 85), MageRange(86, 100)),
                SkinColorRollList{
                    createSkinColorMatcher(Roll::Range(1, 50), sc_tan),
                    createSkinColorMatcher(Roll::Range(51, 80), sc_olive),
@@ -680,7 +680,7 @@ const RaceRollList &getRaceRollList()
     static const auto orsimer
         = Race{r_orsimer,
                "Orsimer (Orc)",
-               createArchetypeRollList(MageRange(1, 65), WarriorRange(66, 80), ThiefRange(81, 100)),
+               createArchetypeRollList(WarriorRange(1, 65), ThiefRange(66, 80), MageRange(81, 100)),
                SkinColorRollList{
                    createSkinColorMatcher(Roll::Range(1, 60), sc_olive),
                    createSkinColorMatcher(Roll::Range(61, 90), sc_dark_green),
@@ -701,7 +701,7 @@ const RaceRollList &getRaceRollList()
     static const auto khajiit
         = Race{r_khajiit,
                "Khajiit",
-               createArchetypeRollList(MageRange(1, 35), WarriorRange(36, 75), ThiefRange(76, 100)),
+               createArchetypeRollList(WarriorRange(1, 35), ThiefRange(36, 75), MageRange(76, 100)),
                SkinColorRollList{createSkinColorMatcher(Roll::Range(1, 100), sc_nil)},
                HairColorRollList{createHairColorMatcher(Roll::Range(1, 30), hc_brown),
                                  createHairColorMatcher(Roll::Range(31, 55), hc_black),
@@ -724,7 +724,7 @@ const RaceRollList &getRaceRollList()
     static const auto argonian
         = Race{r_argonian,
                "Argonian",
-               createArchetypeRollList(MageRange(1, 40), WarriorRange(41, 80), ThiefRange(81, 100)),
+               createArchetypeRollList(WarriorRange(1, 40), ThiefRange(41, 80), MageRange(81, 100)),
                SkinColorRollList{createSkinColorMatcher(Roll::Range(1, 100), sc_nil)},
                HairColorRollList{createHairColorMatcher(Roll::Range(1, 100), hc_nil)},
                EyeColorRollList{createEyeColorMatcher(Roll::Range(1, 40), ec_yellow),
@@ -756,9 +756,10 @@ const RaceRollList &getRaceRollList()
     return list;
 }
 
-Archetype _rollArchetype(const BirthSign &birthSign, const Race &race)
+Archetype rollArchetype(const BirthSign &birthSign, const Race &race)
 {
-    static const Types::String logFormat = "Archetype based on [%1] [%2] so the archetype is [%3]";
+    static const Types::String logFormat
+        = "Archetype rolls based on [%1] [%2] and the archetype rolled is [%3]";
     const bool isArchetypeBasedOnBirthSign = birthSign.rollIfArchetypeBasedOnBirthSign();
     if (isArchetypeBasedOnBirthSign) {
         Archetype archetypeBsign = createArchetype(birthSign.getArchetypeId());
@@ -801,10 +802,7 @@ void rollForCharacterSheet(Types::WeakPtr<CharacterSheet> weakPtr)
 
     sheet->insertAttribute(createAttribute(sexuality));
 
-    const bool isArchetypeBasedOnBirthSign = birthSign.rollIfArchetypeBasedOnBirthSign();
-    const Archetype archetype = isArchetypeBasedOnBirthSign
-                                    ? createArchetype(birthSign.getArchetypeId())
-                                    : race.rollArchetype();
+    const Archetype archetype = rollArchetype(birthSign, race);
     sheet->insertAttribute(createAttribute(archetype));
 
     const RpgClassRollList rpgClassRollList = createRpgClassRollList(archetype.getId());

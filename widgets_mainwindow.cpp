@@ -1,6 +1,6 @@
-#include "mainwindow.h"
+#include "widgets_mainwindow.h"
 #include <QClipboard>
-#include "./ui_mainwindow.h"
+#include "./ui_widgets_mainwindow.h"
 #include "types.h"
 
 class MainWindowData : public QSharedData
@@ -44,9 +44,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::onCharacterGenerated(Types::WeakPtr<CharGen::CharacterSheet> sheetPtr)
+void MainWindow::onCharacterGenerated(Types::WeakPtr<Domain::ESCharSheet> sheetPtr)
 {
-    Types::SharedPtr<CharGen::CharacterSheet> sheet = sheetPtr.lock();
+    Types::SharedPtr<Domain::ESCharSheet> sheet = sheetPtr.lock();
     if (sheet.isNull()) {
         return;
     }

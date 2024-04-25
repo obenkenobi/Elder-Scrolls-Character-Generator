@@ -1,10 +1,10 @@
-#ifndef CHARGEN_ATTRIBUTE_H
-#define CHARGEN_ATTRIBUTE_H
+#ifndef DOMAIN_ATTRIBUTE_H
+#define DOMAIN_ATTRIBUTE_H
 
-#include "roll.h"
+#include "domain_roll.h"
 #include "types.h"
 
-namespace CharGen {
+namespace Domain {
 
 class Attribute
 {
@@ -25,11 +25,11 @@ private:
 };
 
 template<class Tid>
-Attribute createAttribute(const Roll::RollItem<Tid> &item)
+Attribute createAttribute(const RollItem<Tid> &item)
 {
     return Attribute(item.getLabel(), item.getDisplayName());
 }
 
-} // namespace CharGen
+} // namespace Domain
 
-#endif // CHARGEN_ATTRIBUTE_H
+#endif // DOMAIN_ATTRIBUTE_H

@@ -1,11 +1,11 @@
-#ifndef ROLL_H
-#define ROLL_H
+#ifndef DOMAIN_ROLL_H
+#define DOMAIN_ROLL_H
 // #define DEBUG
 
 #include "logging.h"
 #include "types.h"
 
-namespace Roll {
+namespace Domain {
 
 using RollUint = Types::Uint8;
 
@@ -113,6 +113,6 @@ private:
     Types::String displayName_;
 };
 
-} // namespace Roll
+} // namespace Domain
 
-#endif // ROLL_H
+#endif // DOMAIN_ROLL_H

@@ -1,5 +1,5 @@
-#include "mainwindow.h"
 #include "services_charactersvc.h"
+#include "widgets_mainwindow.h"
 
 #include <QApplication>
 
@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     // Declare services
-    Services::CharacterSvc characterSvc;
+    Services::ESCharacterSvc characterSvc;
 
     // Declare window
     MainWindow w;
@@ -17,15 +17,15 @@ int main(int argc, char *argv[])
     QObject::connect(&w,
                      &MainWindow::reqGenCharacterSignal,
                      &characterSvc,
-                     &Services::CharacterSvc::onReqGenCharacter);
+                     &Services::ESCharacterSvc::onReqGenCharacter);
 
     QObject::connect(&w,
                      &MainWindow::reqCopyCharacterToClipboardSignal,
                      &characterSvc,
-                     &Services::CharacterSvc::onRequestCopyCharacterToClipboard);
+                     &Services::ESCharacterSvc::onRequestCopyCharacterToClipboard);
 
     QObject::connect(&characterSvc,
-                     &Services::CharacterSvc::characterGeneratedSignal,
+                     &Services::ESCharacterSvc::characterGeneratedSignal,
                      &w,
                      &MainWindow::onCharacterGenerated);
 

@@ -1,33 +1,33 @@
 #ifndef SERVICES_CHARACTERSVC_H
 #define SERVICES_CHARACTERSVC_H
 
-#include "chargen_charactersheet.h"
+#include "domain_escharsheet.h"
 
 #include <QObject>
 #include <QSharedDataPointer>
 #include "types.h"
 
 namespace Services {
-class CharacterSvcData;
+class ESCharacterSvcData;
 
-class CharacterSvc : public QObject
+class ESCharacterSvc : public QObject
 {
     Q_OBJECT
 public:
-    explicit CharacterSvc(QObject *parent = nullptr);
-    CharacterSvc(const CharacterSvc &);
-    CharacterSvc &operator=(const CharacterSvc &);
-    ~CharacterSvc();
+    explicit ESCharacterSvc(QObject *parent = nullptr);
+    ESCharacterSvc(const ESCharacterSvc &);
+    ESCharacterSvc &operator=(const ESCharacterSvc &);
+    ~ESCharacterSvc();
 
 public slots:
     void onReqGenCharacter();
     void onRequestCopyCharacterToClipboard();
 
 signals:
-    void characterGeneratedSignal(Types::WeakPtr<CharGen::CharacterSheet> weakRef);
+    void characterGeneratedSignal(Types::WeakPtr<Domain::ESCharSheet> weakRef);
 
 private:
-    QSharedDataPointer<CharacterSvcData> data;
+    QSharedDataPointer<ESCharacterSvcData> data;
 };
 } // namespace Services
 

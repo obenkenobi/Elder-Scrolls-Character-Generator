@@ -1,11 +1,12 @@
-#ifndef CHARGEN_CHARACTERSHEET_H
-#define CHARGEN_CHARACTERSHEET_H
+#ifndef DOMAIN_ESCHARSHEET_H
+#define DOMAIN_ESCHARSHEET_H
 
-#include "chargen_attribute.h"
+#include "domain_attribute.h"
 
-namespace CharGen {
+namespace Domain {
 
-class CharacterSheet
+// Character sheet containing attributes that you can iterate over
+class ESCharSheet
 {
 private:
     using AttrVector = Types::Vector<Attribute>;
@@ -14,7 +15,7 @@ private:
 public:
     using Iterator = AttrVector::Iterator;
 
-    CharacterSheet();
+    ESCharSheet();
 
     void clear();
 
@@ -30,6 +31,6 @@ public:
 
     Types::String toClipboardString();
 };
-} // namespace CharGen
+} // namespace Domain
 
-#endif // CHARGEN_CHARACTERSHEET_H
+#endif // DOMAIN_ESCHARSHEET_H

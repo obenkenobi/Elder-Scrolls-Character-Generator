@@ -1,35 +1,35 @@
-#include "chargen_charactersheet.h"
+#include "domain_escharsheet.h"
 
-CharGen::CharacterSheet::CharacterSheet()
+Domain::ESCharSheet::ESCharSheet()
     : attrVector_(AttrVector())
 {}
 
-void CharGen::CharacterSheet::clear()
+void Domain::ESCharSheet::clear()
 {
     attrVector_.clear();
 }
 
-CharGen::CharacterSheet::Iterator CharGen::CharacterSheet::begin()
+Domain::ESCharSheet::Iterator Domain::ESCharSheet::begin()
 {
     return attrVector_.begin();
 }
 
-CharGen::CharacterSheet::Iterator CharGen::CharacterSheet::end()
+Domain::ESCharSheet::Iterator Domain::ESCharSheet::end()
 {
     return attrVector_.end();
 }
 
-void CharGen::CharacterSheet::insertAttribute(const CharGen::Attribute attr)
+void Domain::ESCharSheet::insertAttribute(const Domain::Attribute attr)
 {
     this->attrVector_.push_back(attr);
 }
 
-Types::Size CharGen::CharacterSheet::attributeCount() const
+Types::Size Domain::ESCharSheet::attributeCount() const
 {
     return this->attrVector_.size();
 }
 
-Types::String CharGen::CharacterSheet::toLoggableString()
+Types::String Domain::ESCharSheet::toLoggableString()
 {
     Types::String character_text = "CharacterSheet Attributes={";
 
@@ -45,7 +45,7 @@ Types::String CharGen::CharacterSheet::toLoggableString()
     return character_text;
 }
 
-Types::String CharGen::CharacterSheet::toClipboardString()
+Types::String Domain::ESCharSheet::toClipboardString()
 {
     Types::String character_text = "Character Sheet\n\n";
 

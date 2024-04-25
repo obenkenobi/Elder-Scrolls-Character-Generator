@@ -1,7 +1,7 @@
-#include "roll.h"
+#include "domain_roll.h"
 #include <random>
 
-namespace Roll {
+namespace Domain {
 
 std::uniform_int_distribution<> roll_distribution{1, 100}; // set min and maximum
 std::random_device seed;

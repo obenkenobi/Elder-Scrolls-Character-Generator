@@ -1,9 +1,9 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef WIDGETS_MAINWINDOW_H
+#define WIDGETS_MAINWINDOW_H
 
 #include <QMainWindow>
 #include <QPointer>
-#include "chargen_charactersheet.h"
+#include "domain_escharsheet.h"
 #include "types.h"
 
 QT_BEGIN_NAMESPACE
@@ -26,7 +26,7 @@ signals:
     void reqGenCharacterSignal();
     void reqCopyCharacterToClipboardSignal();
 public slots:
-    void onCharacterGenerated(Types::WeakPtr<CharGen::CharacterSheet>);
+    void onCharacterGenerated(Types::WeakPtr<Domain::ESCharSheet>);
 private slots:
     void on_generateCharacterButton_clicked();
 
@@ -36,4 +36,4 @@ private:
     Ui::MainWindow *ui;
     QSharedDataPointer<MainWindowData> data;
 };
-#endif // MAINWINDOW_H
+#endif // WIDGETS_MAINWINDOW_H

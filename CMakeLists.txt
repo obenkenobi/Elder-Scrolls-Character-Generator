@@ -14,9 +14,9 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+        widgets_mainwindow.cpp
+        widgets_mainwindow.h
+        widgets_mainwindow.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -24,11 +24,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         types.h
-        roll.h roll.cpp
-        chargen_rolls.h chargen_rolls.cpp
+        domain_roll.h domain_roll.cpp
+        domain_character_rolls.h domain_character_rolls.cpp
         logging.h
-        chargen_attribute.h chargen_attribute.cpp
-        chargen_charactersheet.h chargen_charactersheet.cpp
+        domain_attribute.h domain_attribute.cpp
+        domain_escharsheet.h domain_escharsheet.cpp
         services_charactersvc.h services_charactersvc.cpp
 
     )

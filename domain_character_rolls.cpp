@@ -403,6 +403,8 @@ const SexualitiesRollList &createSexualitiesRollList(const GenderId genderId)
         return femaleList;
     case nonbinary:
         break;
+    case gender_nil:
+        break;
     }
     return nonBinaryList;
 }

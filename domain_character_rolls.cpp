@@ -256,51 +256,105 @@ const BirthSignsRollList &getBirthSignsRollList()
     return list;
 }
 
-// Sex
+// Gender
 // ------------------------------------------------------------------------------------------------------------
 
-// Unfortunately Elder Scrolls games do not have an
-// intersex option nor a nonbinary option if you prefer
-// to use gender.
+enum GenderId { gender_nil, male, female, nonbinary };
+enum GenderAssignmentId : Types::Uint8 { gender_assignment_nil, afab, amab };
 
-enum SexId { male, female };
-
-class Sex : public Domain::RollItem<SexId>
+class Gender : public Domain::RollItem<GenderId>
 {
 private:
-    static inline const Types::String LABEL_ = "Sex";
-    bool isTranssexual_;
+    static inline const Types::String LABEL_ = "Gender";
+    bool isTrans_;
+    GenderAssignmentId genderAssignmentId_;
 
 public:
-    Sex(SexId id, Types::String displayName, bool isTranssexual)
+    Gender(GenderId id,
+           Types::String displayName,
+           bool isTranssexual,
+           GenderAssignmentId genderAssignmentId)
         : RollItem(id, displayName)
-        , isTranssexual_(isTranssexual)
+        , isTrans_(isTranssexual)
+        , genderAssignmentId_(genderAssignmentId)
+    {}
+
+    Gender()
+        : RollItem(gender_nil, "")
+        , isTrans_(true)
+        , genderAssignmentId_(gender_assignment_nil)
     {}
 
     Types::String getLabel() const { return LABEL_; }
-    bool isTranssexual() const { return isTranssexual_; }
+    bool isTrans() const { return isTrans_; }
+    GenderAssignmentId genderAssignmentId() const { return genderAssignmentId_; };
 };
 
-Sex rollForSex()
+using GenderRollMatcher = Domain::RollMatcher<Gender>;
+
+using GenderRollList = Domain::RollList<Gender>;
+
+GenderAssignmentId rollForGenderAssignment()
 {
-    static const auto sexRange = Domain::Range(1, 50);
-    const Domain::RollUint sexIdRollNum = Domain::rollRandNumber();
-    const SexId sexId = sexRange.inRollRangeInclusive(sexIdRollNum) ? male : female;
-    const Types::String sexString = sexId == male ? "Man" : "Woman";
+    static const auto afabRange = Domain::Range(1, 50);
+    const Domain::RollUint assignedGenderRollNum = Domain::rollRandNumber();
+    LOG_DEBUG << Types::String(
+                     "Gender assignment roll number [%1] where afab is 1-50 and amab is 51-100")
+                     .arg(assignedGenderRollNum);
+    return afabRange.inRollRangeInclusive(assignedGenderRollNum) ? afab : amab;
+}
 
-    static const auto transRange = Domain::Range(100, 100);
+bool rollForIsTrans()
+{
+    static const auto transRange = Domain::Range(99, 100);
     const Domain::RollUint transRollNum = Domain::rollRandNumber();
-    static bool isTrans = transRange.inRollRangeInclusive(transRollNum);
-    const Types::String transStatusString = !isTrans ? "" : "Transsexual ";
-
-    const Types::String displayName = transStatusString + sexString;
-
-    LOG_DEBUG << Types::String("Rolled for sex [%1] with sex roll %2 and trans roll %3")
-                     .arg(displayName)
-                     .arg(sexIdRollNum)
+    LOG_DEBUG << Types::String("Trans roll number [%1] where being trans means you rolled a 100")
                      .arg(transRollNum);
+    return transRange.inRollRangeInclusive(transRollNum);
+}
 
-    return Sex(sexId, displayName, isTrans);
+bool rollIsNonbinary(bool isTrans)
+{
+    if (!isTrans) {
+        return false;
+    }
+    static auto nbRange = Domain::Range(1, 50);
+    const Domain::RollUint nbRollNum = Domain::rollRandNumber();
+    LOG_DEBUG << Types::String("Nonbinary roll number [%1] where you are nonbinary in range [%2]")
+                     .arg(nbRollNum)
+                     .arg(nbRange.toString());
+
+    return nbRange.inRollRangeInclusive(nbRollNum);
+}
+
+Gender rollGender()
+{
+    const GenderAssignmentId genderAssignmentId = rollForGenderAssignment();
+    const bool isTrans = rollForIsTrans();
+    const bool isNonbinary = rollIsNonbinary(isTrans);
+
+    if (!isTrans) {
+        return genderAssignmentId == amab ? Gender(male, "Man", isTrans, genderAssignmentId)
+                                          : Gender(male, "Woman", isTrans, genderAssignmentId);
+    }
+
+    if (isNonbinary) {
+        const Types::String assignmentStr = (genderAssignmentId == afab) ? "(AFAB)" : "(AMAB)";
+        return Gender(male, "Nonbinary " + assignmentStr, isTrans, genderAssignmentId);
+    }
+
+    if (genderAssignmentId == amab) {
+        return Gender(female, "Transgender Woman ", isTrans, genderAssignmentId);
+    } else {
+        return Gender(male, "Transgender Man", isTrans, genderAssignmentId);
+    }
+}
+
+Gender rollGenderWithLogging()
+{
+    Gender gender = rollGender();
+    LOG_DEBUG << Types::String("Rolled gender ") + gender.getDisplayName();
+    return gender;
 }
 
 // Sexuality
@@ -321,7 +375,7 @@ public:
 using SexualitiesRollList = Domain::RollList<Sexuality>;
 using SexualitiesRollMatcher = Domain::RollMatcher<Sexuality>;
 
-const SexualitiesRollList &createSexualitiesRollList(const SexId sexId)
+const SexualitiesRollList &createSexualitiesRollList(const GenderId genderId)
 {
     static const auto hetero = Sexuality(heterosexual, "Heterosexual");
     static const auto bi = Sexuality(bisexual, "Bisexual");
@@ -336,10 +390,21 @@ const SexualitiesRollList &createSexualitiesRollList(const SexId sexId)
         SexualitiesRollMatcher(Domain::Range(73, 92), bi),
         SexualitiesRollMatcher(Domain::Range(93, 100), homo),
     };
-    if (sexId == female) {
+
+    static const auto nonBinaryList = SexualitiesRollList{
+        SexualitiesRollMatcher(Domain::Range(1, 69), hetero),
+        SexualitiesRollMatcher(Domain::Range(70, 91), bi),
+        SexualitiesRollMatcher(Domain::Range(92, 100), homo),
+    };
+    switch (genderId) {
+    case male:
+        return nonBinaryList;
+    case female:
         return femaleList;
+    case nonbinary:
+        break;
     }
-    return maleList;
+    return nonBinaryList;
 }
 
 // Skin Color
@@ -1014,11 +1079,11 @@ void Domain::rollForESCharSheet(Types::WeakPtr<ESCharSheet> weakPtr)
 
     sheet->insertAttribute(createAttribute(birthSign));
 
-    const Sex sex = rollForSex();
+    const Gender gender = rollGenderWithLogging();
 
-    sheet->insertAttribute(createAttribute(sex));
+    sheet->insertAttribute(createAttribute(gender));
 
-    const SexualitiesRollList sexualitiesRollList = createSexualitiesRollList(sex.getId());
+    const SexualitiesRollList sexualitiesRollList = createSexualitiesRollList(gender.getId());
     const Sexuality &sexuality = sexualitiesRollList.rollForItem();
 
     sheet->insertAttribute(createAttribute(sexuality));

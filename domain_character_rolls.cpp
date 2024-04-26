@@ -335,12 +335,12 @@ Gender rollGender()
 
     if (!isTrans) {
         return genderAssignmentId == amab ? Gender(male, "Man", isTrans, genderAssignmentId)
-                                          : Gender(male, "Woman", isTrans, genderAssignmentId);
+                                          : Gender(female, "Woman", isTrans, genderAssignmentId);
     }
 
     if (isNonbinary) {
         const Types::String assignmentStr = (genderAssignmentId == afab) ? "(AFAB)" : "(AMAB)";
-        return Gender(male, "Nonbinary " + assignmentStr, isTrans, genderAssignmentId);
+        return Gender(nonbinary, "Nonbinary " + assignmentStr, isTrans, genderAssignmentId);
     }
 
     if (genderAssignmentId == amab) {

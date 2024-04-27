@@ -7,7 +7,7 @@
 // Archetype
 // -----------------------------------------------------------------------------
 
-enum ArchetypeId { a_mage, a_thief, a_warrior, a_any };
+enum ArchetypeId : Types::Uint8 { a_mage, a_thief, a_warrior, a_any };
 
 class Archetype : public Domain::RollItem<ArchetypeId>
 {
@@ -59,7 +59,7 @@ ArchetypeRollList createArchetypeRollList(const WarriorRange warriorRange,
 //  RPG Class
 //  ------------------------------------------------------------------------------
 
-enum RpgClassId {
+enum RpgClassId : Types::Uint8 {
     c_archer,
     c_barbarian,
     c_crusader,
@@ -178,7 +178,7 @@ const RpgClassRollList &createRpgClassRollList(const ArchetypeId archetypeId)
 // Birth Signs
 // ------------------------------------------------------------------------------------------------------------
 
-enum BirthSignId {
+enum BirthSignId : Types::Uint8 {
     b_ritual,
     b_lover,
     b_lord,
@@ -259,7 +259,7 @@ const BirthSignsRollList &getBirthSignsRollList()
 // Gender
 // ------------------------------------------------------------------------------------------------------------
 
-enum GenderId { gender_nil, male, female, nonbinary };
+enum GenderId : Types::Uint8 { gender_nil, male, female, nonbinary };
 enum GenderAssignmentId : Types::Uint8 { gender_assignment_nil, afab, amab };
 
 class Gender : public Domain::RollItem<GenderId>
@@ -361,7 +361,7 @@ Gender rollGenderWithLogging()
 // Sexuality
 // ------------------------------------------------------------------------------------------------------------
 
-enum SexualityId { heterosexual, bisexual, homosexual };
+enum SexualityId : Types::Uint8 { heterosexual, bisexual, homosexual };
 
 class Sexuality : public Domain::RollItem<SexualityId>
 {
@@ -413,7 +413,7 @@ const SexualitiesRollList &createSexualitiesRollList(const Gender &gender)
 // Skin Color
 // ------------------------------------------------------------------------------------------------------------------
 
-enum SkinColorId {
+enum SkinColorId : Types::Uint8 {
     sc_nil,
     sc_pale,
     sc_fair,
@@ -488,7 +488,7 @@ SkinColorMatcher createSkinColorMatcher(const Domain::Range range, const SkinCol
 // Hair Color
 // ------------------------------------------------------------------------------------------------------------------
 
-enum HairColorId {
+enum HairColorId : Types::Uint8 {
     hc_nil,
     hc_blonde,
     hc_brown,
@@ -570,7 +570,7 @@ HairColorMatcher createHairColorMatcher(const Domain::Range range, const HairCol
 
 // Eye Color --------------------------------------------------------
 
-enum EyeColorId {
+enum EyeColorId : Types::Uint8 {
     ec_nil,
     ec_blue,
     ec_green,
@@ -644,7 +644,7 @@ EyeColorMatcher createEyeColorMatcher(const Domain::Range range, const EyeColorI
 
 // Fur Pattern --------------------------------------------------------
 
-enum FurPatternId { fp_nil, fp_striped, fp_spotted, fp_solid, fp_tabby };
+enum FurPatternId : Types::Uint8 { fp_nil, fp_striped, fp_spotted, fp_solid, fp_tabby };
 
 class FurPattern : public Domain::RollItem<FurPatternId>
 {
@@ -684,7 +684,7 @@ FurPatternMatcher createFurPatternMatcher(const Domain::Range range, const FurPa
 
 // Scale Color --------------------------------------------------------
 
-enum ScaleColorId { scl_null, scl_dark_green, scl_olive, scl_brown, scl_grey };
+enum ScaleColorId : Types::Uint8 { scl_null, scl_dark_green, scl_olive, scl_brown, scl_grey };
 
 class ScaleColor : public Domain::RollItem<ScaleColorId>
 {
@@ -723,7 +723,7 @@ ScaleColorMatcher createScaleColorMatcher(const Domain::Range range, const Scale
 }
 
 // Horn Type --------------------------------------------------------
-enum HornTypeId { ht_null, ht_none, ht_spiked, ht_curved, ht_both };
+enum HornTypeId : Types::Uint8 { ht_null, ht_none, ht_spiked, ht_curved, ht_both };
 
 class HornType : public Domain::RollItem<HornTypeId>
 {
@@ -764,7 +764,7 @@ HornTypeMatcher createHornTypeMatcher(const Domain::Range range, const HornTypeI
 // Race
 // ------------------------------------------------------------------------------------------------------------------
 
-enum RaceId {
+enum RaceId : Types::Uint8 {
     r_nord,
     r_imperial,
     r_breton,
@@ -1044,6 +1044,67 @@ const RaceRollList &getRaceRollList()
                                           RaceRollMatcher(Domain::Range(99, 100), argonian)};
     return list;
 }
+
+// Occupation
+// --------------------------------------------------------------------------------------------------
+enum OccupationId : Types::Uint8 {};
+
+class Occupation : public Domain::RollItem<OccupationId>
+{
+private:
+    static inline const Types::String LABEL_ = "Occupation";
+
+public:
+    using Domain::RollItem<OccupationId>::RollItem;
+    Types::String getLabel() const { return LABEL_; }
+};
+
+using OccupationRollMatcher = Domain::RollMatcher<Race>;
+
+using OccupationRollList = Domain::RollList<Race>;
+using WarriorOccupationRollList = OccupationRollList;
+using ThiefOccupationRollList = OccupationRollList;
+using MageOccupationRollList = OccupationRollList;
+
+OccupationRollList &chooseOccupationBasedOnArchetype(const Archetype archetype,
+                                                     WarriorOccupationRollList &warriorList,
+                                                     ThiefOccupationRollList &thiefList,
+                                                     MageOccupationRollList &mageList)
+{
+    switch (archetype.getId()) {
+    case a_warrior:
+        return warriorList;
+    case a_thief:
+        return thiefList;
+    case a_mage:
+        return mageList;
+    case a_any:
+        break;
+    }
+    throw std::invalid_argument("Only occupation types of mage, thief, and warrior are allowed");
+}
+
+OccupationRollList getOccpationRollList(const Race &race, const Archetype &archetype)
+{
+    // Todo: add occupations for each race
+    switch (race.getId()) {
+    case r_nord:
+    case r_imperial:
+    case r_breton:
+    case r_dunmer:
+    case r_altmer:
+    case r_orsimer:
+    case r_redguard:
+    case r_bosmer:
+    case r_khajiit:
+    case r_argonian:
+        break;
+    }
+    return OccupationRollList{};
+}
+
+// Combination rolls
+// ------------------------------------------------------------------------------------------------
 
 Archetype rollArchetype(const BirthSign &birthSign, const Race &race)
 {

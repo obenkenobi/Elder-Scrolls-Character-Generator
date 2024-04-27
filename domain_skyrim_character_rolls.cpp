@@ -1,4 +1,4 @@
-#include "domain_character_rolls.h"
+#include "domain_skyrim_character_rolls.h"
 #include "domain_roll.h"
 #include "logging.h"
 #include <stdexcept>
@@ -287,6 +287,7 @@ public:
 
     Types::String getLabel() const { return LABEL_; }
     bool isTrans() const { return isTrans_; }
+    bool isCis() const { return !isTrans_; }
     GenderAssignmentId genderAssignmentId() const { return genderAssignmentId_; };
 };
 
@@ -375,7 +376,7 @@ public:
 using SexualitiesRollList = Domain::RollList<Sexuality>;
 using SexualitiesRollMatcher = Domain::RollMatcher<Sexuality>;
 
-const SexualitiesRollList &createSexualitiesRollList(const GenderId genderId)
+const SexualitiesRollList &createSexualitiesRollList(const Gender &gender)
 {
     static const auto hetero = Sexuality(heterosexual, "Heterosexual");
     static const auto bi = Sexuality(bisexual, "Bisexual");
@@ -391,22 +392,22 @@ const SexualitiesRollList &createSexualitiesRollList(const GenderId genderId)
         SexualitiesRollMatcher(Domain::Range(93, 100), homo),
     };
 
-    static const auto nonBinaryList = SexualitiesRollList{
-        SexualitiesRollMatcher(Domain::Range(1, 69), hetero),
-        SexualitiesRollMatcher(Domain::Range(70, 91), bi),
-        SexualitiesRollMatcher(Domain::Range(92, 100), homo),
-    };
-    switch (genderId) {
+    static const auto transList = SexualitiesRollList({
+        SexualitiesRollMatcher(Domain::Range(1, 31), hetero),
+        SexualitiesRollMatcher(Domain::Range(32, 74), bi),
+        SexualitiesRollMatcher(Domain::Range(75, 100), homo),
+    });
+    switch (gender.getId()) {
     case male:
-        return nonBinaryList;
+        return gender.isCis() ? maleList : transList;
     case female:
-        return femaleList;
+        return gender.isCis() ? femaleList : transList;
     case nonbinary:
         break;
     case gender_nil:
         break;
     }
-    return nonBinaryList;
+    return transList;
 }
 
 // Skin Color
@@ -1085,7 +1086,7 @@ void Domain::rollForESCharSheet(Types::WeakPtr<ESCharSheet> weakPtr)
 
     sheet->insertAttribute(createAttribute(gender));
 
-    const SexualitiesRollList sexualitiesRollList = createSexualitiesRollList(gender.getId());
+    const SexualitiesRollList sexualitiesRollList = createSexualitiesRollList(gender);
     const Sexuality &sexuality = sexualitiesRollList.rollForItem();
 
     sheet->insertAttribute(createAttribute(sexuality));

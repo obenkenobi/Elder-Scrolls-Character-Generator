@@ -2,7 +2,7 @@
 
 #include <QApplication>
 #include <QClipboard>
-#include "domain_character_rolls.h"
+#include "domain_skyrim_character_rolls.h"
 #include "types.h"
 
 class Services::ESCharacterSvcData : public QSharedData

@@ -25,7 +25,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         types.h
         domain_roll.h domain_roll.cpp
-        domain_character_rolls.h domain_character_rolls.cpp
+        domain_skyrim_character_rolls.h domain_skyrim_character_rolls.cpp
         logging.h
         domain_attribute.h domain_attribute.cpp
         domain_escharsheet.h domain_escharsheet.cpp

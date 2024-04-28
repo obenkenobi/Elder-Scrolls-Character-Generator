@@ -1127,7 +1127,7 @@ const OccupationRollList& getOccupationRollList(const Race& race, const Archetyp
 	static const auto bandit = Occupation(oc_imperial_soldier, "Bandit");
 	static const auto streetPerformer = Occupation(oc_street_performer, "Street Performer");
 	static const auto alchemist = Occupation(oc_alchemist, "Alchemist");
-	static const auto thievesGuild = Occupation(oc_thieves_guild, "Thieve's Guild");
+	static const auto thievesGuild = Occupation(oc_thieves_guild, "Thieves' Guild");
 	static const auto bardsCollege = Occupation(oc_bards_college, "Bard's College");
 	static const auto beggar = Occupation(oc_beggar, "Beggar");
 	static const auto manualLaborer = Occupation(oc_manual_laborer, "Manual Laborer");

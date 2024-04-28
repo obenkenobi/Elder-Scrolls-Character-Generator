@@ -75,3 +75,10 @@ CMakeLists.txt.user*
 # Build
 # ------
 build/**/*
+/out/build
+
+# Visual Studio
+# ----------------
+/.vs
+/CMakePresets.json
+/CMakeUserPresets.json

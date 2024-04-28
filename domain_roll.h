@@ -13,7 +13,7 @@ RollUint rollRandNumber();
 
 class Range {
 public:
-    bool inRollRangeInclusive(const RollUint num) const;
+	[[nodiscard]] bool inRollRangeInclusive(const RollUint num) const;
 
     Range(const RollUint &start, const RollUint &end);
 

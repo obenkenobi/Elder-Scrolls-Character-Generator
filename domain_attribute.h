@@ -9,14 +9,14 @@ namespace Domain {
 class Attribute
 {
 public:
-    Attribute(const Types::String &label, const Types::String &displayName);
+    Attribute(Types::String label, Types::String displayName);
 
     Attribute(const Attribute &attr);
 
     Attribute();
 
-    Types::String getDisplayName() const;
-    Types::String getLabel() const;
+    [[nodiscard]] Types::String getDisplayName() const;
+    [[nodiscard]] Types::String getLabel() const;
 
 protected:
 private:

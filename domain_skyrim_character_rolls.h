@@ -6,7 +6,7 @@
 
 namespace Domain {
 
-void rollForESCharSheet(Types::WeakPtr<ESCharSheet>);
+void rollForEsCharSheet(const Types::WeakPtr<EsCharSheet>&);
 
 } // namespace Domain
 

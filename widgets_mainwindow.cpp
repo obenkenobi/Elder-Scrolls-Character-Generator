@@ -28,44 +28,45 @@ private:
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-    , data(new MainWindowData())
+    , ui_(new Ui::MainWindow)
+    , data_(new MainWindowData())
 {
-    ui->setupUi(this);
+    ui_->setupUi(this);
     this->setWindowTitle("Elder Scrolls Character Generator");
 
-    auto characterTable = ui->characterTable;
+    const auto characterTable = ui_->characterTable;
     characterTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     characterTable->setColumnCount(2);
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    delete ui_;
 }
 
-void MainWindow::onCharacterGenerated(Types::WeakPtr<Domain::ESCharSheet> sheetPtr)
+void MainWindow::onCharacterGenerated(Types::WeakPtr<Domain::EsCharSheet> sheetPtr)
 {
-    Types::SharedPtr<Domain::ESCharSheet> sheet = sheetPtr.lock();
+	const Types::SharedPtr<Domain::EsCharSheet> sheet = sheetPtr.lock();
     if (sheet.isNull()) {
         return;
     }
 
-    auto characterTable = ui->characterTable;
+    const auto characterTable = ui_->characterTable;
 
     characterTable->clear();
 
-    characterTable->setRowCount(sheet->attributeCount());
+    characterTable->setRowCount(static_cast<int>(sheet->attributeCount()));
 
-    static const QFont labelFont = *(this->data->charAttrLabelFont());
-    static const QFont displayFont = *(this->data->charAtteDisplayTextFont());
+    static const QFont labelFont = *(this->data_->charAttrLabelFont());
+    static const QFont displayFont = *(this->data_->charAtteDisplayTextFont());
 
-    Types::Size rowNumber = 0;
-    for (auto attrPtr = sheet->begin(); attrPtr != sheet->end(); attrPtr++) {
-        auto *labelItem = new QTableWidgetItem(attrPtr->getLabel());
+    int rowNumber = 0;
+    for (auto& attrPtr : *sheet)
+    {
+        auto *labelItem = new QTableWidgetItem(attrPtr.getLabel());
         labelItem->setFont(labelFont);
 
-        auto *displayItem = new QTableWidgetItem(attrPtr->getDisplayName());
+        auto *displayItem = new QTableWidgetItem(attrPtr.getDisplayName());
         displayItem->setFont(displayFont);
 
         characterTable->setItem(rowNumber, 0, labelItem);

@@ -3,19 +3,19 @@
 
 #include "domain_attribute.h"
 
-Domain::Attribute::Attribute(const Types::String &label, const Types::String &displayName)
-    : label_(label)
-    , displayName_(displayName)
+Domain::Attribute::Attribute(Types::String label, Types::String displayName)
+    : displayName_(std::move(displayName))
+    , label_(std::move(label))
 {}
 
 Domain::Attribute::Attribute(const Domain::Attribute &attr)
-    : label_(attr.label_)
-    , displayName_(attr.displayName_)
+    : displayName_(attr.displayName_)
+    , label_(attr.label_)
 {}
 
 Domain::Attribute::Attribute()
-    : label_("NULL")
-    , displayName_("NULL")
+    : displayName_("NULL")
+    , label_("NULL")
 {}
 
 Types::String Domain::Attribute::getDisplayName() const

@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     // Declare services
-    Services::ESCharacterSvc characterSvc;
+    const Services::EsCharacterSvc characterSvc;
 
     // Declare window
     MainWindow w;
@@ -17,15 +17,15 @@ int main(int argc, char *argv[])
     QObject::connect(&w,
                      &MainWindow::reqGenCharacterSignal,
                      &characterSvc,
-                     &Services::ESCharacterSvc::onReqGenCharacter);
+                     &Services::EsCharacterSvc::onReqGenCharacter);
 
     QObject::connect(&w,
                      &MainWindow::reqCopyCharacterToClipboardSignal,
                      &characterSvc,
-                     &Services::ESCharacterSvc::onRequestCopyCharacterToClipboard);
+                     &Services::EsCharacterSvc::onRequestCopyCharacterToClipboard);
 
     QObject::connect(&characterSvc,
-                     &Services::ESCharacterSvc::characterGeneratedSignal,
+                     &Services::EsCharacterSvc::characterGeneratedSignal,
                      &w,
                      &MainWindow::onCharacterGenerated);
 

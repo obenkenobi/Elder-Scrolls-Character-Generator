@@ -5,54 +5,54 @@
 #include "domain_skyrim_character_rolls.h"
 #include "types.h"
 
-class Services::ESCharacterSvcData : public QSharedData
+class Services::EsCharacterSvcData : public QSharedData
 {
 public:
-    ESCharacterSvcData()
-        : sheet_(Types::SharedPtr<Domain::ESCharSheet>(new Domain::ESCharSheet())){};
+    EsCharacterSvcData()
+        : sheet_(Types::SharedPtr<Domain::EsCharSheet>(new Domain::EsCharSheet())){};
 
 public:
-    Types::WeakPtr<Domain::ESCharSheet> charSheetWeakRef() { return sheet_; };
-    Types::SharedPtr<Domain::ESCharSheet> charSheetStrongRef() { return sheet_; };
+    Types::WeakPtr<Domain::EsCharSheet> charSheetWeakRef() { return sheet_; };
+    Types::SharedPtr<Domain::EsCharSheet> charSheetStrongRef() { return sheet_; };
 
 private:
-    Types::SharedPtr<Domain::ESCharSheet> sheet_;
+    Types::SharedPtr<Domain::EsCharSheet> sheet_;
 };
 
-Services::ESCharacterSvc::ESCharacterSvc(QObject *parent)
+Services::EsCharacterSvc::EsCharacterSvc(QObject *parent)
     : QObject{parent}
-    , data(new ESCharacterSvcData)
+    , data_(new EsCharacterSvcData)
 {}
 
-Services::ESCharacterSvc::ESCharacterSvc(const Services::ESCharacterSvc &rhs)
-    : data{rhs.data}
+Services::EsCharacterSvc::EsCharacterSvc(const Services::EsCharacterSvc &rhs)
+    : data_{rhs.data_}
 {}
 
-Services::ESCharacterSvc &Services::ESCharacterSvc::operator=(const Services::ESCharacterSvc &rhs)
+Services::EsCharacterSvc &Services::EsCharacterSvc::operator=(const Services::EsCharacterSvc &rhs)
 {
     if (this != &rhs)
-        data.operator=(rhs.data);
+        data_.operator=(rhs.data_);
     return *this;
 }
 
-Services::ESCharacterSvc::~ESCharacterSvc() {}
+Services::EsCharacterSvc::~EsCharacterSvc() = default;
 
-void Services::ESCharacterSvc::onReqGenCharacter()
+void Services::EsCharacterSvc::onReqGenCharacter()
 {
-    Types::WeakPtr<Domain::ESCharSheet> weakRef = this->data->charSheetWeakRef();
-    Domain::rollForESCharSheet(weakRef);
+	const Types::WeakPtr<Domain::EsCharSheet> weakRef = this->data_->charSheetWeakRef();
+    Domain::rollForEsCharSheet(weakRef);
     emit characterGeneratedSignal(weakRef);
 }
 
-void Services::ESCharacterSvc::onRequestCopyCharacterToClipboard()
+void Services::EsCharacterSvc::onRequestCopyCharacterToClipboard()
 {
-    Types::SharedPtr<Domain::ESCharSheet> sheet = this->data->charSheetStrongRef();
+	const Types::SharedPtr<Domain::EsCharSheet> sheet = this->data_->charSheetStrongRef();
 
     if (sheet.isNull()) {
         return;
     }
 
-    Types::String text = sheet->toClipboardString();
+	const Types::String text = sheet->toClipboardString();
 
     QClipboard *clipboard = QApplication::clipboard();
 

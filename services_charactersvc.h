@@ -8,26 +8,26 @@
 #include "types.h"
 
 namespace Services {
-class ESCharacterSvcData;
+class EsCharacterSvcData;
 
-class ESCharacterSvc : public QObject
+class EsCharacterSvc final : public QObject
 {
     Q_OBJECT
 public:
-    explicit ESCharacterSvc(QObject *parent = nullptr);
-    ESCharacterSvc(const ESCharacterSvc &);
-    ESCharacterSvc &operator=(const ESCharacterSvc &);
-    ~ESCharacterSvc();
+    explicit EsCharacterSvc(QObject *parent = nullptr);
+    EsCharacterSvc(const EsCharacterSvc &);
+    EsCharacterSvc &operator=(const EsCharacterSvc &);
+    ~EsCharacterSvc() override;
 
 public slots:
     void onReqGenCharacter();
     void onRequestCopyCharacterToClipboard();
 
 signals:
-    void characterGeneratedSignal(Types::WeakPtr<Domain::ESCharSheet> weakRef);
+    void characterGeneratedSignal(Types::WeakPtr<Domain::EsCharSheet> weakRef);
 
 private:
-    QSharedDataPointer<ESCharacterSvcData> data;
+    QSharedDataPointer<EsCharacterSvcData> data_;
 };
 } // namespace Services
 

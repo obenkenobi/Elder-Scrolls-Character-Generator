@@ -29,16 +29,16 @@ private:
 
 template <class T> class RollMatcher {
 public:
-    RollMatcher(const Range range, const T matched_item)
-        : range_(range), matchedItem_(matched_item) {}
+    RollMatcher(const Range& range, const T matchedItem)
+        : range_(range), matchedItem_(matchedItem) {}
 
-    bool match(const RollUint num) const {
+    [[nodiscard]] bool match(const RollUint num) const {
         return this->range_.inRollRangeInclusive(num);
     }
 
     T getMatchedItem() const { return matchedItem_; }
 
-    Range getRange() const { return range_; };
+    [[nodiscard]] Range getRange() const { return range_; };
 
 private:
     Range range_;
@@ -58,9 +58,8 @@ public:
 
     T rollForItem() const {
         const RollUint rolledNum = rollRandNumber();
-        for (auto i = matcherVector_.begin(); i != matcherVector_.end(); i++) {
-            RollMatcher<T> rollMatcher = *i;
-            if (rollMatcher.match(rolledNum)) {
+        for (auto i = matcherVector_.begin(); i != matcherVector_.end(); ++i) {
+	        if (RollMatcher<T> rollMatcher = *i; rollMatcher.match(rolledNum)) {
                 const T item = rollMatcher.getMatchedItem();
                 LOG_INFO << Types::String(
                                 "Rolled [%1] with result [%2] with roll number [%3] in range %4")
@@ -76,9 +75,9 @@ public:
         return lastItem;
     }
 
-    Types::String toString() const
+    [[nodiscard]] Types::String toString() const
     {
-        Types::String label = matcherVector_.at(0).getMatchedItem().getLabel();
+	    const Types::String label = matcherVector_.at(0).getMatchedItem().getLabel();
         Types::String listPrintString = "RollList with Label [" + label + "] and contents (";
         for (auto i = matcherVector_.begin(); i != matcherVector_.end(); i++) {
             if (i != matcherVector_.begin()) {
@@ -95,18 +94,19 @@ template<class Tid>
 class RollItem
 {
 public:
-    explicit RollItem(Tid id, Types::String display_name)
+    explicit RollItem(Tid id, Types::String displayName)
         : id_(id)
-        , displayName_(std::move(display_name))
+        , displayName_(std::move(displayName))
     {}
 
-    Types::String getDisplayName() const { return displayName_; }
+    [[nodiscard]] Types::String getDisplayName() const { return displayName_; }
 
     Tid getId() const { return id_; }
 
-    virtual Types::String getLabel() const = 0;
+    [[nodiscard]] virtual Types::String getLabel() const = 0;
 
 protected:
+    ~RollItem() = default;
     Tid id_;
 
 private:

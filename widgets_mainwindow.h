@@ -2,7 +2,6 @@
 #define WIDGETS_MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QPointer>
 #include "domain_escharsheet.h"
 #include "types.h"
 
@@ -14,26 +13,26 @@ QT_END_NAMESPACE
 
 class MainWindowData;
 
-class MainWindow : public QMainWindow
+class MainWindow final : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow() override;
 
 signals:
     void reqGenCharacterSignal();
     void reqCopyCharacterToClipboardSignal();
 public slots:
-    void onCharacterGenerated(Types::WeakPtr<Domain::ESCharSheet>);
+    void onCharacterGenerated(Types::WeakPtr<Domain::EsCharSheet>);
 private slots:
     void on_generateCharacterButton_clicked();
 
     void on_copyButton_clicked();
 
 private:
-    Ui::MainWindow *ui;
-    QSharedDataPointer<MainWindowData> data;
+    Ui::MainWindow *ui_;
+    QSharedDataPointer<MainWindowData> data_;
 };
 #endif // WIDGETS_MAINWINDOW_H

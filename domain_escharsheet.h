@@ -1,4 +1,5 @@
 #ifndef DOMAIN_ESCHARSHEET_H
+// ReSharper disable once IdentifierTypo
 #define DOMAIN_ESCHARSHEET_H
 
 #include "domain_attribute.h"
@@ -6,7 +7,7 @@
 namespace Domain {
 
 // Character sheet containing attributes that you can iterate over
-class ESCharSheet
+class EsCharSheet
 {
 private:
     using AttrVector = Types::Vector<Attribute>;
@@ -15,7 +16,7 @@ private:
 public:
     using Iterator = AttrVector::Iterator;
 
-    ESCharSheet();
+    EsCharSheet();
 
     void clear();
 
@@ -25,12 +26,13 @@ public:
 
     void insertAttribute(const Attribute attr);
 
-    Types::Size attributeCount() const;
+    [[nodiscard]] Types::Size attributeCount() const;
 
-    Types::String toLoggableString();
+    Types::String toLoggingString();
 
     Types::String toClipboardString();
 };
 } // namespace Domain
 
+// ReSharper disable once CommentTypo
 #endif // DOMAIN_ESCHARSHEET_H

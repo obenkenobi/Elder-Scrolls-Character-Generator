@@ -32,7 +32,7 @@ Archetype createArchetype(const ArchetypeId id)
     case a_any:
         return Archetype(id, "Any");
     }
-    std::invalid_argument("Invalid archetype id when creating archetype");
+    return Archetype(id, "Any");
 }
 
 using ArchetypeRollList = Domain::RollList<Archetype>;
@@ -1047,7 +1047,35 @@ const RaceRollList &getRaceRollList()
 
 // Occupation
 // --------------------------------------------------------------------------------------------------
-enum OccupationId : Types::Uint8 {};
+enum OccupationId : Types::Uint8 {
+    oc_stormcloak,
+    oc_imperial_soldier,
+    oc_hunter,
+    oc_mercenary,
+    oc_city_guard,
+    oc_companion,
+    oc_vigilant,
+    oc_dawnguard,
+    oc_arena_fighter,
+    oc_bandit,
+    oc_street_performer,
+    oc_alchemist,
+    oc_thieves_guild,
+    oc_bards_college,
+    oc_beggar,
+    oc_manual_laborer,
+    oc_dark_brotherhood,
+    oc_priest,
+    oc_court_wizard,
+    oc_healer,
+    oc_imperial_mage,
+    oc_stormcloak_mage,
+    oc_college_student,
+    oc_undertaker,
+    oc_warlock,
+    oc_investor,
+    oc_archaeologist
+};
 
 class Occupation : public Domain::RollItem<OccupationId>
 {
@@ -1059,17 +1087,18 @@ public:
     Types::String getLabel() const { return LABEL_; }
 };
 
-using OccupationRollMatcher = Domain::RollMatcher<Race>;
+using OccupationRollMatcher = Domain::RollMatcher<Occupation>;
 
-using OccupationRollList = Domain::RollList<Race>;
+using OccupationRollList = Domain::RollList<Occupation>;
 using WarriorOccupationRollList = OccupationRollList;
 using ThiefOccupationRollList = OccupationRollList;
 using MageOccupationRollList = OccupationRollList;
 
-OccupationRollList &chooseOccupationBasedOnArchetype(const Archetype archetype,
-                                                     WarriorOccupationRollList &warriorList,
-                                                     ThiefOccupationRollList &thiefList,
-                                                     MageOccupationRollList &mageList)
+const OccupationRollList &chooseOccupationBasedOnArchetype(
+    const Archetype archetype,
+    const WarriorOccupationRollList &warriorList,
+    const ThiefOccupationRollList &thiefList,
+    const MageOccupationRollList &mageList)
 {
     switch (archetype.getId()) {
     case a_warrior:
@@ -1084,12 +1113,120 @@ OccupationRollList &chooseOccupationBasedOnArchetype(const Archetype archetype,
     throw std::invalid_argument("Only occupation types of mage, thief, and warrior are allowed");
 }
 
-OccupationRollList getOccpationRollList(const Race &race, const Archetype &archetype)
+const OccupationRollList &getOccpationRollList(const Race &race, const Archetype &archetype)
 {
-    // Todo: add occupations for each race
+    static const auto stormcloak = Occupation(oc_stormcloak, "Stormcloak");
+    static const auto imperialSoldier = Occupation(oc_imperial_soldier, "Imperial Soldier");
+    static const auto hunter = Occupation(oc_hunter, "Hunter");
+    static const auto mercenary = Occupation(oc_mercenary, "Mercenary");
+    static const auto cityGuard = Occupation(oc_city_guard, "City Guard");
+    static const auto companion = Occupation(oc_companion,
+                                             "Companion (or equivalent is the Fighter's Guild)");
+    static const auto vigilant = Occupation(oc_vigilant, "Vigilant of Stendar");
+    static const auto dawnguard = Occupation(oc_dawnguard,
+                                             "Dawnguard (or just a regular Vampire Hunter)");
+    static const auto arenaFighter = Occupation(oc_arena_fighter, "Arena Fighter");
+    static const auto bandit = Occupation(oc_imperial_soldier, "Bandit");
+    static const auto streetPerformer = Occupation(oc_street_performer, "Street Performer");
+    static const auto alchemist = Occupation(oc_alchemist, "Alchemist");
+    static const auto thievesGuild = Occupation(oc_thieves_guild, "Thieve's Guild");
+    static const auto bardsCollege = Occupation(oc_bards_college, "Bard's College");
+    static const auto beggar = Occupation(oc_beggar, "Beggar");
+    static const auto manualLaborer = Occupation(oc_manual_laborer, "Manual Laborer");
+    static const auto darkBrotherhood = Occupation(oc_dark_brotherhood, "Dark Brotherhood");
+    static const auto priest = Occupation(oc_priest, "Priest");
+    static const auto courtWizard = Occupation(oc_court_wizard, "Court Wizard");
+    static const auto healer = Occupation(oc_healer, "Healer");
+    static const auto imperialMage = Occupation(oc_imperial_mage, "Imperial Mage");
+    static const auto stormcloakMage = Occupation(oc_stormcloak_mage, "Stormcloak Mage");
+    static const auto collegeStudent = Occupation(oc_college_student, "College Student");
+    static const auto undertaker = Occupation(oc_undertaker, "Undertaker");
+    static const auto warlock = Occupation(oc_warlock, "Warlock");
+    static const auto investor = Occupation(oc_investor, "Investor");
+    static const auto archaeologist = Occupation(oc_archaeologist, "Archeologist");
+
+    static const auto nordWarriorRollList
+        = WarriorOccupationRollList{OccupationRollMatcher(Domain::Range(1, 15), stormcloak),
+                                    OccupationRollMatcher(Domain::Range(16, 30), imperialSoldier),
+                                    OccupationRollMatcher(Domain::Range(31, 45), hunter),
+                                    OccupationRollMatcher(Domain::Range(46, 57), mercenary),
+                                    OccupationRollMatcher(Domain::Range(58, 65), cityGuard),
+                                    OccupationRollMatcher(Domain::Range(66, 80), companion),
+                                    OccupationRollMatcher(Domain::Range(81, 84), vigilant),
+                                    OccupationRollMatcher(Domain::Range(85, 89), dawnguard),
+                                    OccupationRollMatcher(Domain::Range(90, 91), arenaFighter),
+                                    OccupationRollMatcher(Domain::Range(92, 100), bandit)};
+
+    static const auto nordThiefList
+        = ThiefOccupationRollList{OccupationRollMatcher(Domain::Range(1, 15), streetPerformer),
+                                  OccupationRollMatcher(Domain::Range(16, 30), alchemist),
+                                  OccupationRollMatcher(Domain::Range(31, 45), thievesGuild),
+                                  OccupationRollMatcher(Domain::Range(46, 50), mercenary),
+                                  OccupationRollMatcher(Domain::Range(51, 60), hunter),
+                                  OccupationRollMatcher(Domain::Range(61, 65), bardsCollege),
+                                  OccupationRollMatcher(Domain::Range(66, 70), mercenary),
+                                  OccupationRollMatcher(Domain::Range(71, 82), manualLaborer),
+                                  OccupationRollMatcher(Domain::Range(83, 85), darkBrotherhood),
+                                  OccupationRollMatcher(Domain::Range(86, 100), bandit)};
+
+    static const auto nordMageList
+        = MageOccupationRollList{OccupationRollMatcher(Domain::Range(1, 15), priest),
+                                 OccupationRollMatcher(Domain::Range(16, 30), courtWizard),
+                                 OccupationRollMatcher(Domain::Range(31, 45), healer),
+                                 OccupationRollMatcher(Domain::Range(46, 50), vigilant),
+                                 OccupationRollMatcher(Domain::Range(51, 60), imperialMage),
+                                 OccupationRollMatcher(Domain::Range(61, 65), stormcloakMage),
+                                 OccupationRollMatcher(Domain::Range(66, 70), collegeStudent),
+                                 OccupationRollMatcher(Domain::Range(71, 82), dawnguard),
+                                 OccupationRollMatcher(Domain::Range(83, 85), undertaker),
+                                 OccupationRollMatcher(Domain::Range(86, 100), warlock)};
+
+    static const auto imperialWarriorRollList
+        = WarriorOccupationRollList{OccupationRollMatcher(Domain::Range(1, 39), imperialSoldier),
+                                    OccupationRollMatcher(Domain::Range(40, 45), cityGuard),
+                                    OccupationRollMatcher(Domain::Range(46, 50), arenaFighter),
+                                    OccupationRollMatcher(Domain::Range(51, 55), companion),
+                                    OccupationRollMatcher(Domain::Range(56, 67), mercenary),
+                                    OccupationRollMatcher(Domain::Range(68, 72), vigilant),
+                                    OccupationRollMatcher(Domain::Range(73, 78), dawnguard),
+                                    OccupationRollMatcher(Domain::Range(79, 88), hunter),
+                                    OccupationRollMatcher(Domain::Range(89, 98), bandit),
+                                    OccupationRollMatcher(Domain::Range(99, 100), stormcloak)};
+    static const auto imperialThiefList
+        = ThiefOccupationRollList{OccupationRollMatcher(Domain::Range(1, 15), streetPerformer),
+                                  OccupationRollMatcher(Domain::Range(16, 30), alchemist),
+                                  OccupationRollMatcher(Domain::Range(31, 45), thievesGuild),
+                                  OccupationRollMatcher(Domain::Range(46, 50), manualLaborer),
+                                  OccupationRollMatcher(Domain::Range(51, 60), bardsCollege),
+                                  OccupationRollMatcher(Domain::Range(61, 65), beggar),
+                                  OccupationRollMatcher(Domain::Range(66, 70), mercenary),
+                                  OccupationRollMatcher(Domain::Range(71, 82), bandit),
+                                  OccupationRollMatcher(Domain::Range(83, 85), darkBrotherhood),
+                                  OccupationRollMatcher(Domain::Range(86, 100), investor)};
+    static const auto imperialMageList
+        = MageOccupationRollList{OccupationRollMatcher(Domain::Range(1, 20), priest),
+                                 OccupationRollMatcher(Domain::Range(21, 30), courtWizard),
+                                 OccupationRollMatcher(Domain::Range(31, 45), healer),
+                                 OccupationRollMatcher(Domain::Range(46, 60), vigilant),
+                                 OccupationRollMatcher(Domain::Range(61, 70), imperialMage),
+                                 OccupationRollMatcher(Domain::Range(71, 75), archaeologist),
+                                 OccupationRollMatcher(Domain::Range(76, 80), collegeStudent),
+                                 OccupationRollMatcher(Domain::Range(81, 85), dawnguard),
+                                 OccupationRollMatcher(Domain::Range(86, 90), undertaker),
+                                 OccupationRollMatcher(Domain::Range(91, 100), warlock)};
+
     switch (race.getId()) {
     case r_nord:
+        return chooseOccupationBasedOnArchetype(archetype,
+                                                nordWarriorRollList,
+                                                nordThiefList,
+                                                nordMageList);
     case r_imperial:
+        return chooseOccupationBasedOnArchetype(archetype,
+                                                imperialWarriorRollList,
+                                                imperialThiefList,
+                                                imperialMageList);
+    //Todo: do other races
     case r_breton:
     case r_dunmer:
     case r_altmer:
@@ -1100,7 +1237,8 @@ OccupationRollList getOccpationRollList(const Race &race, const Archetype &arche
     case r_argonian:
         break;
     }
-    return OccupationRollList{};
+    // Todo: return argonian rolls
+    return nordWarriorRollList;
 }
 
 // Combination rolls
@@ -1126,6 +1264,7 @@ void Domain::rollForESCharSheet(Types::WeakPtr<ESCharSheet> weakPtr)
 {
     Types::SharedPtr<ESCharSheet> sheet = weakPtr.lock();
     if (sheet.isNull()) {
+        LOG_DEBUG << "Character sheet is null";
         return;
     }
 

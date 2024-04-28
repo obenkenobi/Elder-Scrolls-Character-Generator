@@ -12,6 +12,9 @@ namespace Types {
 
 using String = QString;
 using Uint8 = quint8;
+using Uint16 = quint16;
+using Uint32 = quint32;
+using Uint64 = quint64;
 using Size = qsizetype;
 
 template <class T> using Vector = QVector<T>;

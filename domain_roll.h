@@ -76,7 +76,7 @@ public:
         return lastItem;
     }
 
-    Types::String toString()
+    Types::String toString() const
     {
         Types::String label = matcherVector_.at(0).getMatchedItem().getLabel();
         Types::String listPrintString = "RollList with Label [" + label + "] and contents (";

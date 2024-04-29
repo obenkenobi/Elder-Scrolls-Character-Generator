@@ -7,28 +7,30 @@
 #include <QSharedDataPointer>
 #include "types.h"
 
-namespace Services {
-class EsCharacterSvcData;
-
-class EsCharacterSvc final : public QObject
+namespace Services
 {
-    Q_OBJECT
-public:
-    explicit EsCharacterSvc(QObject *parent = nullptr);
-    EsCharacterSvc(const EsCharacterSvc &);
-    EsCharacterSvc &operator=(const EsCharacterSvc &);
-    ~EsCharacterSvc() override;
+	class EsCharacterSvcData;
 
-public slots:
-    void onReqGenCharacter();
-    void onRequestCopyCharacterToClipboard();
+	class EsCharacterSvc final : public QObject
+	{
+		Q_OBJECT
 
-signals:
-    void characterGeneratedSignal(Types::WeakPtr<Domain::EsCharSheet> weakRef);
+	public:
+		explicit EsCharacterSvc(QObject* parent = nullptr);
+		EsCharacterSvc(const EsCharacterSvc&);
+		EsCharacterSvc& operator=(const EsCharacterSvc&);
+		~EsCharacterSvc() override;
 
-private:
-    QSharedDataPointer<EsCharacterSvcData> data_;
-};
+	public slots:
+		void onReqGenCharacter();
+		void onRequestCopyCharacterToClipboard();
+
+	signals:
+		void characterGeneratedSignal(Types::WeakPtr<Domain::EsCharSheet> weakRef);
+
+	private:
+		QSharedDataPointer<EsCharacterSvcData> data_;
+	};
 } // namespace Services
 
 #endif // SERVICES_CHARACTERSVC_H

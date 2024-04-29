@@ -6,18 +6,18 @@
 #include <QTimeZone>
 #include "types.h"
 
-static inline auto formatLogPrefix(const Types::String &level)
+static inline auto formatLogPrefix(const Types::String& level)
 {
 	const QDateTime currentDateTime = QDateTime::currentDateTime();
-    Types::String dateTimeString = currentDateTime.toTimeZone(currentDateTime.timeZone())
-                                       .toString(Qt::ISODate);
+	Types::String dateTimeString = currentDateTime.toTimeZone(currentDateTime.timeZone())
+	                                              .toString(Qt::ISODate);
 	const Types::Size spaceCount = (level.size() < 5) ? 5 - level.size() : 0;
 	const auto prefix = Types::String("[%1]%2 [%3] ")
 	                    .arg(level, Types::String(spaceCount, ' '), dateTimeString)
 	                    .toUtf8()
 	                    .data();
 
-    return prefix;
+	return prefix;
 }
 
 #ifndef LOG_DEBUG

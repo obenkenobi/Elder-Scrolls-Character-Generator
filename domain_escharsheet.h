@@ -4,34 +4,34 @@
 
 #include "domain_attribute.h"
 
-namespace Domain {
-
-// Character sheet containing attributes that you can iterate over
-class EsCharSheet
+namespace Domain
 {
-private:
-    using AttrVector = Types::Vector<Attribute>;
-    AttrVector attrVector_;
+	// Character sheet containing attributes that you can iterate over
+	class EsCharSheet
+	{
+	private:
+		using AttrVector = Types::Vector<Attribute>;
+		AttrVector attrVector_;
 
-public:
-    using Iterator = AttrVector::Iterator;
+	public:
+		using Iterator = AttrVector::Iterator;
 
-    EsCharSheet();
+		EsCharSheet();
 
-    void clear();
+		void clear();
 
-    Iterator begin();
+		Iterator begin();
 
-    Iterator end();
+		Iterator end();
 
-    void insertAttribute(const Attribute attr);
+		void insertAttribute(const Attribute attr);
 
-    [[nodiscard]] Types::Size attributeCount() const;
+		[[nodiscard]] Types::Size attributeCount() const;
 
-    Types::String toLoggingString();
+		Types::String toLoggingString();
 
-    Types::String toClipboardString();
-};
+		Types::String toClipboardString();
+	};
 } // namespace Domain
 
 // ReSharper disable once CommentTypo

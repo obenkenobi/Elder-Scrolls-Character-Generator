@@ -299,7 +299,7 @@ public:
 	[[nodiscard]] Types::String getLabel() const override { return label_; }
 	[[nodiscard]] bool isTrans() const { return isTrans_; }
 	[[nodiscard]] bool isCis() const { return !isTrans_; }
-	[[nodiscard]] GenderAssignmentId genderAssignmentId() const { return genderAssignmentId_; };
+	[[nodiscard]] GenderAssignmentId genderAssignmentId() const { return genderAssignmentId_; }
 };
 
 using GenderRollMatcher = Domain::RollMatcher<Gender>;
@@ -422,7 +422,6 @@ const SexualitiesRollList& createSexualitiesRollList(const Gender& gender)
 	case female:
 		return gender.isCis() ? femaleList : transList;
 	case nonbinary:
-		break;
 	case gender_nil:
 		break;
 	}
@@ -1189,7 +1188,21 @@ enum OccupationId : Types::Uint8
 	oc_summerset_scholar,
 	oc_orsinium_extremist,
 	oc_stronghold_shaman,
-	oc_stronghold_guard, oc_bodyguard, oc_skooma_smuggler
+	oc_stronghold_guard,
+	oc_bodyguard,
+	oc_skooma_smuggler,
+	oc_alikr_warrior,
+	oc_stone_mage,
+	oc_woodsman,
+	oc_lumberjack,
+	oc_redwater_den_guard,
+	oc_aspiring_druid,
+	oc_aspiring_illusionist,
+	oc_caravan_guard,
+	oc_caravan_scout,
+	oc_caravan_mystic,
+	oc_assemblage_guard,
+	oc_hist_mage
 };
 
 class Occupation final : public Domain::RollItem<OccupationId>
@@ -1275,6 +1288,18 @@ const OccupationRollList& getOccupationRollList(const Race& race, const Archetyp
 	static const auto strongholdGuard = Occupation(oc_stronghold_guard, "Stronghold Guard");
 	static const auto bodyguard = Occupation(oc_bodyguard, "Bodyguard");
 	static const auto skoomaSmuggler = Occupation(oc_skooma_smuggler, "Skooma Smuggler");
+	static const auto alikrWarrior = Occupation(oc_alikr_warrior, "Alik'r Warrior");
+	static const auto stoneMage = Occupation(oc_stone_mage, "Stone Mage");
+	static const auto woodsman = Occupation(oc_woodsman, "Woodsman");
+	static const auto lumberjack = Occupation(oc_lumberjack, "Lumberjack");
+	static const auto redwaterDenGuard = Occupation(oc_redwater_den_guard, "Redwater Den Guard");
+	static const auto aspiringDruid = Occupation(oc_aspiring_druid, "Aspiring Druid");
+	static const auto aspiringIllusionist = Occupation(oc_aspiring_illusionist, "Aspiring Illusionist");
+	static const auto caravanGuard = Occupation(oc_caravan_guard, "Caravan Guard");
+	static const auto caravanScout = Occupation(oc_caravan_scout, "Caravan Scout");
+	static const auto caravanMystic = Occupation(oc_caravan_mystic, "Caravan Mystic");
+	static const auto assemblageGuard = Occupation(oc_assemblage_guard, "Assemblage Guard");
+	static const auto histMage = Occupation(oc_hist_mage, "Hist Mage");
 
 	static const auto nordWarriorList
 		= OccupationRollList{
@@ -1568,7 +1593,7 @@ Archetype rollArchetype(const BirthSign& birthSign, const Race& race)
 {
 	static const Types::String logFormat
 		= "Archetype rolls based on [%1] [%2] and the archetype rolled is [%3]";
-	if (const bool isArchetypeBasedOnBirthSign = birthSign.rollIfArchetypeBasedOnBirthSign())
+	if (birthSign.rollIfArchetypeBasedOnBirthSign())
 	{
 		const Archetype archetypeFromBirthSign = createArchetype(birthSign.getArchetypeId());
 		LOG_INFO << logFormat.arg("birthsign",

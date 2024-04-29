@@ -13,9 +13,7 @@ static inline auto formatLogPrefix(const Types::String& level)
 	                                              .toString(Qt::ISODate);
 	const Types::Size spaceCount = (level.size() < 5) ? 5 - level.size() : 0;
 	const auto prefix = Types::String("[%1]%2 [%3] ")
-	                    .arg(level, Types::String(spaceCount, ' '), dateTimeString)
-	                    .toUtf8()
-	                    .data();
+	                    .arg(level, Types::String(spaceCount, ' '), dateTimeString);
 
 	return prefix;
 }

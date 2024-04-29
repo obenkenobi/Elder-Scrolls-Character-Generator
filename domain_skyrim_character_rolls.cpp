@@ -1622,7 +1622,86 @@ const OccupationRollList& getOccupationRollList(const Race& race, const Archetyp
 			OccupationRollMatcher(Domain::Range(91, 100), aspiringCultist)
 		};
 
-	//Todo: add occupations to all races
+	static const auto khajiitWarriorList
+		= OccupationRollList{
+			OccupationRollMatcher(Domain::Range(1, 28), caravanGuard),
+			OccupationRollMatcher(Domain::Range(29, 48), mercenary),
+			OccupationRollMatcher(Domain::Range(49, 59), explorer),
+			OccupationRollMatcher(Domain::Range(60, 64), arenaFighter),
+			OccupationRollMatcher(Domain::Range(65, 73), hunter),
+			OccupationRollMatcher(Domain::Range(74, 77), redwaterDenGuard),
+			OccupationRollMatcher(Domain::Range(78, 82), bountyHunter),
+			OccupationRollMatcher(Domain::Range(83, 97), bandit),
+			OccupationRollMatcher(Domain::Range(98, 99), vigilant),
+			OccupationRollMatcher(Domain::Range(100, 100), companion)
+		};
+	static const auto khajiitThiefList
+		= OccupationRollList{
+			OccupationRollMatcher(Domain::Range(1, 15), skoomaSmuggler),
+			OccupationRollMatcher(Domain::Range(16, 30), thievesGuild),
+			OccupationRollMatcher(Domain::Range(31, 40), darkBrotherhood),
+			OccupationRollMatcher(Domain::Range(41, 44), beggar),
+			OccupationRollMatcher(Domain::Range(45, 60), caravanScout),
+			OccupationRollMatcher(Domain::Range(61, 67), treasureHunter),
+			OccupationRollMatcher(Domain::Range(68, 72), alchemist),
+			OccupationRollMatcher(Domain::Range(73, 85), bandit),
+			OccupationRollMatcher(Domain::Range(86, 95), mercenary),
+			OccupationRollMatcher(Domain::Range(96, 100), bardsCollege)
+		};
+	static const auto khajiitMageList
+		= OccupationRollList{
+			OccupationRollMatcher(Domain::Range(1, 20), caravanMystic),
+			OccupationRollMatcher(Domain::Range(21, 30), priest),
+			OccupationRollMatcher(Domain::Range(31, 40), healer),
+			OccupationRollMatcher(Domain::Range(41, 44), archaeologist),
+			OccupationRollMatcher(Domain::Range(45, 60), collegeStudent),
+			OccupationRollMatcher(Domain::Range(61, 70), warlock),
+			OccupationRollMatcher(Domain::Range(71, 79), undertaker),
+			OccupationRollMatcher(Domain::Range(80, 95), aspiringCultist),
+			OccupationRollMatcher(Domain::Range(96, 98), courtWizard),
+			OccupationRollMatcher(Domain::Range(99, 100), vigilant)
+		};
+
+	static const auto argonianWarriorList
+		= OccupationRollList{
+			OccupationRollMatcher(Domain::Range(1, 15), assemblageGuard),
+			OccupationRollMatcher(Domain::Range(16, 30), mercenary),
+			OccupationRollMatcher(Domain::Range(31, 40), explorer),
+			OccupationRollMatcher(Domain::Range(41, 44), arenaFighter),
+			OccupationRollMatcher(Domain::Range(45, 65), hunter),
+			OccupationRollMatcher(Domain::Range(66, 67), vigilant),
+			OccupationRollMatcher(Domain::Range(68, 72), bodyguard),
+			OccupationRollMatcher(Domain::Range(73, 85), bountyHunter),
+			OccupationRollMatcher(Domain::Range(86, 98), bandit),
+			OccupationRollMatcher(Domain::Range(99, 100), companion)
+	};
+	static const auto argonianThiefList
+		= OccupationRollList{
+			OccupationRollMatcher(Domain::Range(1, 15), manualLaborer),
+			OccupationRollMatcher(Domain::Range(16, 30), thievesGuild),
+			OccupationRollMatcher(Domain::Range(31, 45), darkBrotherhood),
+			OccupationRollMatcher(Domain::Range(46, 60), beggar),
+			OccupationRollMatcher(Domain::Range(61, 70), bandit),
+			OccupationRollMatcher(Domain::Range(71, 75), treasureHunter),
+			OccupationRollMatcher(Domain::Range(76, 80), alchemist),
+			OccupationRollMatcher(Domain::Range(81, 85), streetPerformer),
+			OccupationRollMatcher(Domain::Range(86, 99), mercenary),
+			OccupationRollMatcher(Domain::Range(100, 100), bardsCollege)
+	};
+	static const auto argonianMageList
+		= OccupationRollList{
+			OccupationRollMatcher(Domain::Range(1, 20), histMage),
+			OccupationRollMatcher(Domain::Range(21, 30), aspiringIllusionist),
+			OccupationRollMatcher(Domain::Range(31, 45), priest),
+			OccupationRollMatcher(Domain::Range(46, 60), healer),
+			OccupationRollMatcher(Domain::Range(61, 70), archaeologist),
+			OccupationRollMatcher(Domain::Range(71, 75), collegeStudent),
+			OccupationRollMatcher(Domain::Range(76, 80), undertaker),
+			OccupationRollMatcher(Domain::Range(81, 85), aspiringCultist),
+			OccupationRollMatcher(Domain::Range(86, 99), warlock),
+			OccupationRollMatcher(Domain::Range(100, 100), courtWizard)
+	};
+
 	switch (race.getId())
 	{
 	case r_nord:
@@ -1666,11 +1745,17 @@ const OccupationRollList& getOccupationRollList(const Race& race, const Archetyp
 		                                        bosmerThiefList,
 		                                        bosmerMageList);
 	case r_khajiit:
+		return chooseOccupationBasedOnArchetype(archetype,
+		                                        khajiitWarriorList,
+		                                        khajiitThiefList,
+		                                        khajiitMageList);
 	case r_argonian:
 		break;
 	}
-	// Todo: return argonian rolls
-	return nordWarriorList;
+	return chooseOccupationBasedOnArchetype(archetype,
+		argonianWarriorList,
+		argonianThiefList,
+		argonianMageList);
 }
 
 // Combination rolls
@@ -1731,6 +1816,11 @@ void Domain::rollForEsCharSheet(const Types::WeakPtr<EsCharSheet>& weakPtr)
 	const RpgClass rpgClass = rpgClassRollList.rollForItem();
 
 	sheet->insertAttribute(createAttribute(rpgClass));
+
+	const OccupationRollList& occupationRollList = getOccupationRollList(race, archetype);
+	const Occupation occupation = occupationRollList.rollForItem();
+
+	sheet->insertAttribute(createAttribute(occupation));
 
 	if (const SkinColor skinColor = race.rollSkinColor(); skinColor.getId() != sc_nil)
 	{

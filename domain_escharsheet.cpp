@@ -52,10 +52,14 @@ Types::String Domain::EsCharSheet::toClipboardString()
 {
 	Types::String characterText = "Character Sheet\n\n";
 
-	for (auto& attrPtr : this->attrVector_)
+	for (auto& attr : this->attrVector_)
 	{
 		characterText += Types::String("%1:\t%2\n")
-			.arg(attrPtr.getLabel(), attrPtr.getDisplayName());
+			.arg(attr.getLabel(), attr.getDisplayName());
+		if (attr.hasDescription())
+		{
+			characterText += Types::String("description:\n%1\n").arg(attr.getDescription());
+		}
 	}
 
 	return characterText;

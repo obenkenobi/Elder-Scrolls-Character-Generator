@@ -5,7 +5,7 @@
 
 Domain::Attribute::Attribute(Types::String label, Types::String displayName, Types::String description)
 	: displayName_(std::move(displayName))
-	, description_(std::move(description)), label_(std::move(label))
+	  , description_(std::move(description)), label_(std::move(label))
 {
 }
 
@@ -16,7 +16,7 @@ Domain::Attribute::Attribute(Types::String label, Types::String displayName)
 }
 
 Domain::Attribute::Attribute(const Domain::Attribute& attr)
-	: displayName_(attr.displayName_), description_(attr.getLabel()),
+	: displayName_(attr.displayName_), description_(attr.description_),
 	  label_(attr.label_)
 {
 }
@@ -27,6 +27,11 @@ Domain::Attribute::Attribute()
 {
 }
 
+bool Domain::Attribute::hasDescription() const
+{
+	return !description_.isEmpty();
+}
+
 Types::String Domain::Attribute::getDisplayName() const
 {
 	return displayName_;
@@ -34,7 +39,7 @@ Types::String Domain::Attribute::getDisplayName() const
 
 Types::String Domain::Attribute::getDescription() const
 {
-	return description_;
+	return description_.isEmpty() ? "N/A" : description_;
 }
 
 Types::String Domain::Attribute::getLabel() const

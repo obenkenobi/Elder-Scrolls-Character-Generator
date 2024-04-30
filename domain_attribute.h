@@ -16,9 +16,11 @@ namespace Domain
 
 		Attribute();
 
+		[[nodiscard]] bool hasDescription() const;
 		[[nodiscard]] Types::String getDisplayName() const;
 		[[nodiscard]] Types::String getDescription() const;
 		[[nodiscard]] Types::String getLabel() const;
+
 	private:
 		Types::String displayName_;
 		Types::String description_;

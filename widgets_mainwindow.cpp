@@ -5,25 +5,35 @@
 
 class MainWindowData : public QSharedData
 {
+private:
+	using FontPtr = Types::SharedPtr<QFont>;
+
 public:
 	MainWindowData()
-		: charAttrLabelFont_(Types::SharedPtr<QFont>(new QFont))
-		  , charAtteDisplayTextFont_(Types::SharedPtr<QFont>(new QFont))
+		: charAttrLabelFont_(FontPtr(new QFont)),
+		  charAtteDisplayTextFont_(FontPtr(new QFont)),
+		  headingFont_(FontPtr(new QFont))
 	{
 		charAttrLabelFont_->setBold(true);
-		charAttrLabelFont_->setPixelSize(20);
+		charAttrLabelFont_->setPixelSize(15);
 
 		charAtteDisplayTextFont_->setBold(false);
 		charAtteDisplayTextFont_->setPixelSize(15);
+
+		headingFont_->setBold(true);
+		headingFont_->setPixelSize(20);
 	}
 
-	Types::SharedPtr<QFont> charAttrLabelFont() const { return charAttrLabelFont_; }
+	QFont& charAttrLabelFont() const { return *charAttrLabelFont_; }
 
-	Types::SharedPtr<QFont> charAtteDisplayTextFont() const { return charAtteDisplayTextFont_; }
+	QFont& charAtteDisplayTextFont() const { return *charAtteDisplayTextFont_; }
+
+	QFont& getHeadingFont() const { return *headingFont_; }
 
 private:
-	Types::SharedPtr<QFont> charAttrLabelFont_;
-	Types::SharedPtr<QFont> charAtteDisplayTextFont_;
+	FontPtr charAttrLabelFont_;
+	FontPtr charAtteDisplayTextFont_;
+	FontPtr headingFont_;
 };
 
 MainWindow::MainWindow(QWidget* parent)
@@ -36,7 +46,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 	const auto characterTable = ui_->characterTable;
 	characterTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-	characterTable->setColumnCount(2);
+	characterTable->setColumnCount(3);
 }
 
 MainWindow::~MainWindow()
@@ -56,31 +66,54 @@ void MainWindow::onCharacterGenerated(Types::WeakPtr<Domain::EsCharSheet> sheetP
 
 	characterTable->clear();
 
-	characterTable->setRowCount(static_cast<int>(sheet->attributeCount()));
+	characterTable->setRowCount(static_cast<int>(1 + sheet->attributeCount()));
 
-	static const QFont labelFont = *(this->data_->charAttrLabelFont());
-	static const QFont displayFont = *(this->data_->charAtteDisplayTextFont());
+	{
+		static const QFont& headingFont = this->data_->getHeadingFont();
 
-	int rowNumber = 0;
+		auto* labelHeadingItem = new QTableWidgetItem("Label");
+		auto* displayHeadingItem = new QTableWidgetItem("Name");
+		auto* descriptionHeadingItem = new QTableWidgetItem("Description");
+
+
+		labelHeadingItem->setFont(headingFont);
+		displayHeadingItem->setFont(headingFont);
+		descriptionHeadingItem->setFont(headingFont);
+
+
+		characterTable->setItem(0, 0, labelHeadingItem);
+		characterTable->setItem(0, 1, displayHeadingItem);
+		characterTable->setItem(0, 2, descriptionHeadingItem);
+	}
+
+	static const QFont& labelFont = this->data_->charAttrLabelFont();
+	static const QFont& displayFont = this->data_->charAtteDisplayTextFont();
+
+	int rowNumber = 1;
 	for (auto& attrPtr : *sheet)
 	{
 		auto* labelItem = new QTableWidgetItem(attrPtr.getLabel());
-		labelItem->setFont(labelFont);
-
 		auto* displayItem = new QTableWidgetItem(attrPtr.getDisplayName());
+		auto* descriptionItem = new QTableWidgetItem(attrPtr.getDescription());
+
+		labelItem->setFont(labelFont);
 		displayItem->setFont(displayFont);
 
 		characterTable->setItem(rowNumber, 0, labelItem);
 		characterTable->setItem(rowNumber, 1, displayItem);
+		characterTable->setItem(rowNumber, 2, descriptionItem);
+
 		rowNumber++;
 	}
 }
 
+// ReSharper disable once CppInconsistentNaming
 void MainWindow::on_generateCharacterButton_clicked()
 {
 	emit this->reqGenCharacterSignal();
 }
 
+// ReSharper disable once CppInconsistentNaming
 void MainWindow::on_copyButton_clicked()
 {
 	emit reqCopyCharacterToClipboardSignal();

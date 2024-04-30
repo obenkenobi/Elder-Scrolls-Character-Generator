@@ -11,7 +11,7 @@ public:
 	EsCharacterSvcData()
 		: sheet_(Types::SharedPtr<Domain::EsCharSheet>(new Domain::EsCharSheet()))
 	{
-	};
+	}
 
 public:
 	Types::WeakPtr<Domain::EsCharSheet> charSheetWeakRef() { return sheet_; };

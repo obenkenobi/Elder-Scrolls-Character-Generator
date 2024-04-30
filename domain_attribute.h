@@ -9,6 +9,7 @@ namespace Domain
 	class Attribute
 	{
 	public:
+		Attribute(Types::String label, Types::String displayName, Types::String description);
 		Attribute(Types::String label, Types::String displayName);
 
 		Attribute(const Attribute& attr);
@@ -16,11 +17,11 @@ namespace Domain
 		Attribute();
 
 		[[nodiscard]] Types::String getDisplayName() const;
+		[[nodiscard]] Types::String getDescription() const;
 		[[nodiscard]] Types::String getLabel() const;
-
-	protected:
 	private:
 		Types::String displayName_;
+		Types::String description_;
 		Types::String label_;
 	};
 

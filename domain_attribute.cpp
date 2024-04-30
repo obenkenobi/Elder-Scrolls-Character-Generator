@@ -3,15 +3,21 @@
 
 #include "domain_attribute.h"
 
+Domain::Attribute::Attribute(Types::String label, Types::String displayName, Types::String description)
+	: displayName_(std::move(displayName))
+	, description_(std::move(description)), label_(std::move(label))
+{
+}
+
 Domain::Attribute::Attribute(Types::String label, Types::String displayName)
 	: displayName_(std::move(displayName))
-	  , label_(std::move(label))
+	  , description_(""), label_(std::move(label))
 {
 }
 
 Domain::Attribute::Attribute(const Domain::Attribute& attr)
-	: displayName_(attr.displayName_)
-	  , label_(attr.label_)
+	: displayName_(attr.displayName_), description_(attr.getLabel()),
+	  label_(attr.label_)
 {
 }
 
@@ -24,6 +30,11 @@ Domain::Attribute::Attribute()
 Types::String Domain::Attribute::getDisplayName() const
 {
 	return displayName_;
+}
+
+Types::String Domain::Attribute::getDescription() const
+{
+	return description_;
 }
 
 Types::String Domain::Attribute::getLabel() const

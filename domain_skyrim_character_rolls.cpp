@@ -1758,6 +1758,71 @@ const OccupationRollList& getOccupationRollList(const Race& race, const Archetyp
 		argonianMageList);
 }
 
+// Faith
+// ------------------------------------------------------------------------------------------------
+
+// Todo: set up faith logic (gods and pantheons)
+
+// Motivation
+// ------------------------------------------------------------------------------------------------
+
+enum MotivationId : Types::Uint8
+{
+	mtv_popularity,
+	mtv_knowledge,
+	mtv_vengeance_redemption,
+	mtv_idealism,
+	mtv_fortune,
+	mtv_romance,
+	mtv_freedom,
+	mtv_family_friends,
+	mtv_power,
+	mtv_survival
+};
+
+class Motivation final: public Domain::RollItem<MotivationId>
+{
+private:
+	static inline const Types::String label_ = "Motivation";
+public:
+	using RollItem::RollItem;
+	[[nodiscard]] Types::String getLabel() const override { return label_; }
+};
+
+using MotivationRollMatcher = Domain::RollMatcher<Motivation>;
+
+using MotivationRollList = Domain::RollList<Motivation>;
+
+const MotivationRollList& getMotivationRollList()
+{
+	static const auto popularity = Motivation(mtv_popularity, "Popularity");
+	static const auto knowledge = Motivation(mtv_knowledge, "Knowledge");
+	static const auto vengeanceRedemption = Motivation(mtv_vengeance_redemption, "Vengeance/Redemption");
+	static const auto idealism = Motivation(mtv_idealism, "Idealism");
+	static const auto fortune = Motivation(mtv_fortune, "Fortune");
+	static const auto romance = Motivation(mtv_romance, "Romance");
+	static const auto freedom = Motivation(mtv_freedom, "Freedom");
+	static const auto familyFriends = Motivation(mtv_family_friends, "Family/Friends");
+	static const auto power = Motivation(mtv_power, "Power");
+	static const auto survival = Motivation(mtv_survival, "Survival");
+
+	static const auto list = MotivationRollList {
+		MotivationRollMatcher(Domain::Range(1, 10), popularity),
+		MotivationRollMatcher(Domain::Range(11, 20), knowledge),
+		MotivationRollMatcher(Domain::Range(21, 30), vengeanceRedemption),
+		MotivationRollMatcher(Domain::Range(31, 40), idealism),
+		MotivationRollMatcher(Domain::Range(41, 50), fortune),
+		MotivationRollMatcher(Domain::Range(51, 60), romance),
+		MotivationRollMatcher(Domain::Range(61, 70), freedom),
+		MotivationRollMatcher(Domain::Range(71, 80), familyFriends),
+		MotivationRollMatcher(Domain::Range(81, 90), power),
+		MotivationRollMatcher(Domain::Range(91, 100), survival)
+	};
+
+	return list;
+}
+
+
 // Combination rolls
 // ------------------------------------------------------------------------------------------------
 
@@ -1821,6 +1886,12 @@ void Domain::rollForEsCharSheet(const Types::WeakPtr<EsCharSheet>& weakPtr)
 	const Occupation occupation = occupationRollList.rollForItem();
 
 	sheet->insertAttribute(createAttribute(occupation));
+
+	const MotivationRollList& motivationRollList = getMotivationRollList();
+	const Motivation motivation = motivationRollList.rollForItem();
+	sheet->insertAttribute(createAttribute(motivation));
+
+	// Physical attributes
 
 	if (const SkinColor skinColor = race.rollSkinColor(); skinColor.getId() != sc_nil)
 	{

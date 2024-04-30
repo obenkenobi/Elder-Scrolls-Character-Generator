@@ -31,5 +31,5 @@ int main(int argc, char* argv[])
 
 	// Start application
 	w.show();
-	return a.exec();
+	return a.exec();  // NOLINT(readability-static-accessed-through-instance)
 }
